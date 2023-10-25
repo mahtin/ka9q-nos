@@ -149,7 +149,9 @@ typedef unsigned char uint8;	/* 8-bit unsigned integer */
 /* Various low-level and miscellaneous functions */
 int availmem(void);
 void *callocw(unsigned nelem,unsigned size);
+#if 0
 int32 clock();
+#endif
 int dirps(void);
 void free(void *);
 #define FREE(p)		{free(p); p = NULL;}
@@ -216,6 +218,38 @@ extern char *sys_errlist[];
 extern int errno;
 #endif
 
+#ifdef STANDALONE
+/* from errno.h */
+extern char *sys_errlist[];
+extern int errno;
+
+/* from string.h */
+extern int srtcasecmp(const char *string1, const char *string2);
+extern int strncasecmp(const char *string1, const char *string2, size_t count);
+#define strcmpi(string1, string2) (srtcasecmp((string1), (string2)))
+#define stricmp(string1, string2) (srtcasecmp((string1), (string2)))
+#define strnicmp(string1, string2, count) (strncasecmp((string1), (string2), (count)))
+
+/* from sys/stat.h */
+extern int mkdir(const char *path, mode_t mode);
+/* from unistd.h*/
+extern int rmdir(const char *path);
+extern int access(const char *pathname, int mode);
+
+/* from mem.h */
+#if 0
+extern void memcpy(void *,const void *,unsigned long);
+extern void memset(void *,int,unsigned long);
+#endif
+
+extern void outportb(unsigned port, char c);
+extern char inportb(unsigned port);
+
+extern void enable();
+extern void disable();
+
+#endif /* STANDALONE */
+
 /* Externals used by getopt */
 extern int optind;
 extern char *optarg;
@@ -223,8 +257,10 @@ extern char *optarg;
 /* Threshold setting on available memory */
 extern int32 Memthresh;
 
+#if 0
 /* System clock - count of ticks since startup */
 extern int32 Clock;
+#endif
 
 /* Various useful strings */
 extern char Badhost[];
