@@ -5,7 +5,9 @@
  *  Adapted back into 871225.9 by KA9Q 15 Feb 1988
  */
 #include <stdio.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include "global.h"
 #include <stdarg.h>
 #include "timer.h"

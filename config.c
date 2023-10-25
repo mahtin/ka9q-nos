@@ -8,7 +8,9 @@
  */
 
 #include <stdio.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include "global.h"
 #include "config.h"
 #include "mbuf.h"

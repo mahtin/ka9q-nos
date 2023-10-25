@@ -10,9 +10,7 @@ static void rip_recv(struct raw_ip *rp);
 static void autobind(struct usock *up);
 
 int
-so_ip_sock(up,protocol)
-struct usock *up;
-int protocol;
+so_ip_sock(struct usock *up,int protocol)
 {
 	int s;
 
@@ -22,19 +20,14 @@ int protocol;
 	return 0;
 }
 int
-so_ip_conn(up)
-struct usock *up;
+so_ip_conn(struct usock *up)
 {
 	if(up->name == NULL)
 		autobind(up);
 	return 0;
 }
 int
-so_ip_recv(up,bpp,from,fromlen)
-struct usock *up;
-struct mbuf **bpp;
-struct sockaddr *from;
-int *fromlen;
+so_ip_recv(struct usock *up,struct mbuf **bpp,struct sockaddr *from,int *fromlen)
 {
 	struct raw_ip *rip;
 	struct sockaddr_in *remote;
@@ -68,11 +61,8 @@ int *fromlen;
 	return cnt;
 }
 int
-so_ip_send(
-struct usock *up,
-struct mbuf **bpp,
-struct sockaddr *to
-){
+so_ip_send(struct usock *up, struct mbuf **bpp,struct sockaddr *to)
+{
 	struct sockaddr_in *local,*remote;
 
 	if(up->name == NULL)
@@ -92,9 +82,7 @@ struct sockaddr *to
 	return 0;
 }
 int
-so_ip_qlen(up,rtx)
-struct usock *up;
-int rtx;
+so_ip_qlen(struct usock *up,int rtx)
 {
 	int len;
 
@@ -109,16 +97,13 @@ int rtx;
 	return len;
 }
 int
-so_ip_close(up)
-struct usock *up;
+so_ip_close(struct usock *up)
 {
 	del_ip(up->cb.rip);
 	return 0;
 }
 int
-checkipaddr(name,namelen)
-struct sockaddr *name;
-int namelen;
+checkipaddr(struct sockaddr *name,int namelen)
 {
 	struct sockaddr_in *sock;
 
@@ -130,16 +115,14 @@ int namelen;
 
 /* Raw IP receive upcall routine */
 static void
-rip_recv(rp)
-struct raw_ip *rp;
+rip_recv(struct raw_ip *rp)
 {
 	ksignal(itop(rp->user),1);
 	kwait(NULL);
 }
 /* Issue an automatic bind of a local address */
 static void
-autobind(up)
-struct usock *up;
+autobind(struct usock *up)
 {
 	struct sockaddr_in local;
 	int s;
@@ -151,8 +134,7 @@ struct usock *up;
 	bind(s,(struct sockaddr *)&local,sizeof(struct sockaddr_in));
 }
 char *
-ippsocket(p)
-struct sockaddr *p;
+ippsocket(struct sockaddr *p)
 {
 	struct sockaddr_in *sp;
 	struct socket socket;

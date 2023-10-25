@@ -98,18 +98,15 @@ struct pktdrvr {
 	struct iface *iface;
 };
 
-extern struct pktdrvr Pktdrvr[];
-
 /* In pktdrvr.c: */
-uint8 *pkint(int dev,unsigned short cx, unsigned short ax);
-void pk_tx(int dev,void *arg1,void *unused);
-int pk_send(struct mbuf **bpp,struct iface *iface,int32 gateway,uint8 tos);
-extern char Pkt_sig[];
+extern uint8 *pkint(int dev,unsigned short cx, unsigned short ax);
+extern void pk_tx(int dev,void *arg1,void *unused);
+extern int pk_send(struct mbuf **bpp,struct iface *iface,int32 gateway,uint8 tos);
 
 /* In pkvec.asm: */
-INTERRUPT pkvec0(void);
-INTERRUPT pkvec1(void);
-INTERRUPT pkvec2(void);
+extern INTERRUPT pkvec0(void);
+extern INTERRUPT pkvec1(void);
+extern INTERRUPT pkvec2(void);
 
 #endif	/* MSDOS */
 

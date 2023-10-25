@@ -59,19 +59,19 @@ struct display {
 	long sflimit;	/* Limit on sfsize */
 };
 
-struct display *newdisplay(int rows,int cols,int noscrol,int sfsize);
-void displaywrite(struct display *dp,void *buf,int cnt);
-void dupdate(struct display *dp);
-void closedisplay(struct display *dp);
-void statwrite(struct display *dp,int col,void *buf,int cnt,int attrib);
-void dscrollmode(struct display *dp,int flag);
-void dhome(struct display *dp);
-void dend(struct display *dp);
-void dpgup(struct display *dp);
-void dpgdown(struct display *dp);
-void dcursup(struct display *dp);
-void dcursdown(struct display *dp);
-void debug(char *s);
+extern struct display *newdisplay(int rows,int cols,int noscrol,int sfsize);
+extern void displaywrite(struct display *dp,void *buf,int cnt);
+extern void dupdate(struct display *dp);
+extern void closedisplay(struct display *dp);
+extern void statwrite(struct display *dp,int col,void *buf,int cnt,int attrib);
+extern void dscrollmode(struct display *dp,int flag);
+extern void dhome(struct display *dp);
+extern void dend(struct display *dp);
+extern void dpgup(struct display *dp);
+extern void dpgdown(struct display *dp);
+extern void dcursup(struct display *dp);
+extern void dcursdown(struct display *dp);
+extern void debug(char *s);
 
-#endif _DISPLAY_H
+#endif /* _DISPLAY_H */
 

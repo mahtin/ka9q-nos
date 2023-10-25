@@ -12,8 +12,8 @@
 
 
 #include <stdio.h>
-#include <sys\types.h>
-#include <sys\stat.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <time.h>
 #include <ctype.h>
 #include <stdarg.h>

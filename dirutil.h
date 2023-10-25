@@ -6,12 +6,12 @@
 #endif
 
 /* In dirutil.c */
-FILE *dir(char *path,int full);
-int filedir(char *name,int times,char *ret_str);
-int getdir(char *path,int full,FILE *file);
+extern FILE *dir(char *path,int full);
+extern int filedir(char *name,int times,char *ret_str);
+extern int getdir(char *path,int full,FILE *file);
 
 /* In pathname.c: */
-char *pathname(char *cd,char *path);
+extern char *pathname(char *cd,char *path);
 
 #endif /* _DIRUTIL_H */
 

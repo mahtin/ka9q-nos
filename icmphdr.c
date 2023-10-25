@@ -59,9 +59,7 @@ struct mbuf **bpp
 }
 /* Pull off ICMP header */
 int
-ntohicmp(icmp,bpp)
-struct icmp *icmp;
-struct mbuf **bpp;
+ntohicmp(struct icmp *icmp,struct mbuf **bpp)
 {
 	uint8 icmpbuf[8];
 

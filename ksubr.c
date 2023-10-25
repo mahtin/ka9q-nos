@@ -4,7 +4,9 @@
  * Copyright 1991 Phil Karn, KA9Q
  */
 #include <stdio.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include "global.h"
 #include "proc.h"
 #include "nospc.h"
@@ -19,7 +21,7 @@ static char *Taskers[] = {
 };
 
 
-static oldNull;
+static unsigned short oldNull;
 
 /* Template for contents of jmp_buf in Turbo C */
 struct env {
@@ -62,10 +64,7 @@ kinit()
  * than not having it showing up at all.
  */
 int
-ps(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+ps(int argc,char *argv[],void *p)
 {
 	register struct proc *pp;
 	int i;
@@ -100,8 +99,7 @@ void *p;
 	return 0;
 }
 static void
-pproc(pp)
-struct proc *pp;
+pproc(struct proc *pp)
 {
 	register struct env *ep;
 	char insock[5],outsock[5];
@@ -124,8 +122,7 @@ struct proc *pp;
 	 insock,outsock,pp->name);
 }
 static int
-stkutil(pp)
-struct proc *pp;
+stkutil(struct proc *pp)
 {
 	unsigned i;
 	register uint16 *sp;
@@ -182,13 +179,13 @@ chkstk()
 	}
 }
 /* Machine-dependent initialization of a task */
+/* struct proc *pp;	Pointer to task structure */
+/* int iarg;		Generic integer arg */
+/* void *parg1;		Generic pointer arg #1 */
+/* void *parg2;		Generic pointer arg #2 */
+/* void (*pc)();	Initial execution address */
 void
-psetup(pp,iarg,parg1,parg2,pc)
-struct proc *pp;	/* Pointer to task structure */
-int iarg;		/* Generic integer arg */
-void *parg1;		/* Generic pointer arg #1 */
-void *parg2;		/* Generic pointer arg #2 */
-void (*pc)();		/* Initial execution address */
+psetup(struct proc *pp,int iarg,void *parg1,void *parg2,void (*pc)())
 {
 	register int *stktop;
 	register struct env *ep;
@@ -236,8 +233,7 @@ void (*pc)();		/* Initial execution address */
 	pp->flags.istate = 1;
 }
 unsigned
-phash(event)
-void *event;
+phash(void *event)
 {
 	register unsigned x;
 

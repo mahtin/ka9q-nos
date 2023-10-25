@@ -3,7 +3,9 @@
 /* currently only attempting to use the AMD7910 on Channel A */
 
 #include <stdio.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include "global.h"
 #include "mbuf.h"
 #include "iface.h"

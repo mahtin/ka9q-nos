@@ -16,7 +16,26 @@
  * Copyright 1992 Phil Karn, KA9Q
  * 
  */
+#ifdef MSDOS
 #include <conio.h>
+#else
+#define _NORMALCURSOR	0
+#define _NOCURSOR	0
+#define _setcursortype(x)	{}
+
+#define MONO 0
+struct text_info {
+	int screenheight;
+	int screenwidth;
+	int currmode;
+};
+#define gettextinfo(p)	{(p)->screenheight=25; (p)->screenwidth=80; (p)->currmode = MONO;}
+#define puttext(col1,row1,col2,row2,lbuf)	{ printf("%s", lbuf); }
+#define gotoxy(col,row)				{ }
+
+#define cprintf printf
+
+#endif
 #include <string.h>
 #include <sys/stat.h>
 #include "global.h"
@@ -49,11 +68,11 @@ extern struct proc *Display;
  * to the top of the screen instead of scrolling the entire screen upwards
  * with each new line. This can be handy for packet trace screens.
  */
+/* int rows,cols;	Size of new screen. 0,0 defaults to whole screen */
+/* int noscrol;		1: old IBM-style wrapping instead of scrolling */
+/* int sflimit;		Scrollback file size, lines */
 struct display *
-newdisplay(rows,cols,noscrol,sflimit)
-int rows,cols;	/* Size of new screen. 0,0 defaults to whole screen */
-int noscrol;	/* 1: old IBM-style wrapping instead of scrolling */
-int sflimit;	/* Scrollback file size, lines */
+newdisplay(int rows, int cols,int noscrol,int sflimit)
 {
 	struct display *dp;
 	struct text_info text_info;
@@ -96,8 +115,7 @@ int sflimit;	/* Scrollback file size, lines */
 
 /* Close a display - simply get rid of the memory */
 void
-closedisplay(dp)
-struct display *dp;
+closedisplay(struct display *dp)
 {
 	if(dp == NULL || dp->cookie != D_COOKIE)
 		return;
@@ -110,13 +128,13 @@ struct display *dp;
  * machinery so as to not upset a possible escape sequence in
  * progress. Maximum of one line allowed, no control sequences
  */
+/* struct display *dp;	Virtual screen pointer */
+/* int col;		Starting column of write */
+/* void *buf;		Data to be written */
+/* int cnt;		Count */
+/* int attrib;		Screen attribute to be used */
 void
-statwrite(dp,col,buf,cnt,attrib)
-struct display *dp;	/* Virtual screen pointer */
-int col;		/* Starting column of write */
-void *buf;		/* Data to be written */
-int cnt;		/* Count */
-int attrib;		/* Screen attribute to be used */
+statwrite(struct display *dp,int col,void *buf,int cnt,int attrib)
 {
 	uint8 *buf1 = buf;
 	uint8 *sp = bufloc(dp,dp->slast+1,col);
@@ -146,11 +164,11 @@ int attrib;		/* Screen attribute to be used */
  * dupdate(dp) must be called to copy the virtual screen to the real
  * screen.
  */
+/* struct display *dp;	Virtual screen pointer */
+/* void *buf;		Data to be written */
+/* int cnt;		Count */
 void
-displaywrite(dp,buf,cnt)
-struct display *dp;	/* Virtual screen pointer */
-void *buf;		/* Data to be written */
-int cnt;		/* Count */
+displaywrite(struct display *dp,void *buf,int cnt)
 {
 	uint8 c;
 	char *bufp = buf;
@@ -182,9 +200,9 @@ int cnt;		/* Count */
  * Note the different row and column numbering conventions -- I start
  * at zero, the puttext() and gotoxy() library functions start at 1.
  */
+/* struct display *dp;	Virtual screen pointer */
 void
-dupdate(dp)
-struct display *dp;	/* Virtual screen pointer */
+dupdate(struct display *dp)
 {
 	int row,rows;
 	long sp;
@@ -259,9 +277,7 @@ struct display *dp;	/* Virtual screen pointer */
 	dp->flags.dirty_screen = 0;
 }
 void
-dscrollmode(dp,flag)
-struct display *dp;
-int flag;
+dscrollmode(struct display *dp,int flag)
 {
 	if(dp == NULL || dp->cookie != D_COOKIE)
 		return;
@@ -276,8 +292,7 @@ int flag;
 
 
 void
-dhome(dp)
-struct display *dp;
+dhome(struct display *dp)
 {
 	if(dp == NULL || dp->cookie != D_COOKIE)
 		return;
@@ -289,8 +304,7 @@ struct display *dp;
 	}
 }
 void
-dend(dp)
-struct display *dp;
+dend(struct display *dp)
 {
 	if(dp == NULL || dp->cookie != D_COOKIE)
 		return;
@@ -302,8 +316,7 @@ struct display *dp;
 	}
 }
 void
-dpgup(dp)
-struct display *dp;
+dpgup(struct display *dp)
 {
 	long newoffs;
 
@@ -319,8 +332,7 @@ struct display *dp;
 	}
 }
 void
-dpgdown(dp)
-struct display *dp;
+dpgdown(struct display *dp)
 {
 	long newoffs;
 
@@ -336,8 +348,7 @@ struct display *dp;
 	}
 }
 void
-dcursup(dp)
-struct display *dp;
+dcursup(struct display *dp)
 {
 	if(dp == NULL || dp->cookie != D_COOKIE)
 		return;
@@ -349,8 +360,7 @@ struct display *dp;
 	}
 }
 void
-dcursdown(dp)
-struct display *dp;
+dcursdown(struct display *dp)
 {
 	if(dp == NULL || dp->cookie != D_COOKIE)
 		return;
@@ -364,9 +374,7 @@ struct display *dp;
 
 /* Process incoming character while in ESCAPE state */
 static void
-desc(dp,c)
-struct display *dp;
-uint8 c;
+desc(struct display *dp,uint8 c)
 {
 	int i;
 
@@ -404,9 +412,7 @@ uint8 c;
 
 /* Process characters after a ESC[ sequence */
 static void
-darg(dp,c)
-struct display *dp;
-uint8 c;
+darg(struct display *dp,uint8 c)
 {
 	int i;
 
@@ -551,9 +557,7 @@ uint8 c;
 }
 /* Clear from specified location to end of screen, leaving cursor as is */
 static void
-dclreod(dp,row,col)
-struct display *dp;
-int row,col;
+dclreod(struct display *dp,int row,int col)
 {
 	dclreol(dp,row,col);	/* Clear current line */
 	for(row = row + 1;row <= dp->slast;row++)
@@ -561,8 +565,7 @@ int row,col;
 }
 /* Insert space at cursor, moving all chars on right to right one position */
 static void
-dinsert(dp)
-struct display *dp;
+dinsert(struct display *dp)
 {
 	int i = 2*(dp->cols - dp->col - 1);
 	uint8 *cp = bufloc(dp,dp->row,dp->col);
@@ -579,8 +582,7 @@ struct display *dp;
 }
 /* Delete character at cursor, moving chars to right left one position */
 static void
-ddelchar(dp)
-struct display *dp;
+ddelchar(struct display *dp)
 {
 	uint8 *cp = bufloc(dp,dp->row,dp->col);
 	int i = 2*(dp->cols-dp->col-1);
@@ -599,8 +601,7 @@ struct display *dp;
 }
 /* Delete line containing cursor, moving lines below up one line */
 static void
-ddelline(dp)
-struct display *dp;
+ddelline(struct display *dp)
 {
 	uint8 *cp1,*cp2;
 	int row;
@@ -619,8 +620,7 @@ struct display *dp;
 }		
 /* Insert blank line where cursor is. Push existing lines down one */
 static void
-dinsline(dp)
-struct display *dp;
+dinsline(struct display *dp)
 {
 	uint8 *cp1,*cp2;
 	int row;
@@ -641,9 +641,7 @@ struct display *dp;
 
 /* Process an argument to an attribute set command */
 static void
-dattrib(dp,val)
-struct display *dp;
-int val;
+dattrib(struct display *dp,int val)
 {
 	switch(val){
 	case 0:	/* Normal white on black */
@@ -671,9 +669,7 @@ int val;
  }
 /* Display character */
 static void
-dchar(dp,c)
-struct display *dp;
-uint8 c;
+dchar(struct display *dp,uint8 c)
 {
 	uint8 *cp;
 	int row,rowchange;
@@ -772,9 +768,7 @@ uint8 c;
 
 /* Clear from specified location to end of line. Cursor is not moved */
 static void
-dclreol(dp,row,col)
-struct display *dp;
-int row,col;
+dclreol(struct display *dp,int row,int col)
 {
 	uint8 *cp = bufloc(dp,row,col);
 	struct dirty *dirtp = &dp->dirty[row];
@@ -791,8 +785,7 @@ int row,col;
 }
 /* Move cursor to top left corner, clear screen */
 static void
-dclrscr(dp)
-struct display *dp;
+dclrscr(struct display *dp)
 {
 	dclreod(dp,0,0);
 	dp->row = dp->col = 0;
@@ -804,9 +797,7 @@ struct display *dp;
  * scrolling
  */
 static uint8 *
-bufloc(dp,row,col)
-struct display *dp;
-int row,col;
+bufloc(struct display *dp,int row,int col)
 {
 #ifndef	notdef
 	if(row < 0 || row >= dp->rows || col < 0 || col >= dp->cols){
@@ -821,8 +812,7 @@ int row,col;
 }
 /* Immediately display short debug string on lower right corner of display */
 void
-debug(s)
-char *s;
+debug(char *s)
 {
 	int i;
 	static uint8 msg[2*DSIZ];

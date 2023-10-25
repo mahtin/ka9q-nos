@@ -303,6 +303,8 @@ struct tcb *tcb;
 		sent -= 2;
 		recvd -= 2;
 		break;
+	case TCP_CLOSED:	/* should not hit this case */
+		break;
 	}
 	printf("Local: %s",pinet(&tcb->conn.local));
 	printf(" Remote: %s",pinet(&tcb->conn.remote));

@@ -89,10 +89,7 @@ static struct cmds Mbtab[] = {
 
 
 int
-dombox(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dombox(int argc,char *argv[],void *p)
 {
 	if(argc == 1)
 		return domboxdisplay(argc,argv,p);
@@ -103,28 +100,19 @@ void *p;
  * be restricted.
  */
 static int
-doattend(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doattend(int argc,char *argv[],void *p)
 {
 	return setbool(&Attended,"Attended flag",argc,argv);
 }
 
 static int
-domaxmsg(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+domaxmsg(int argc,char *argv[],void *p)
 {
 	return setuns(&Maxlet,"Maximum messages per area",argc,argv);
 }
 
 static int
-domotd(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+domotd(int argc,char *argv[],void *p)
 {
 	if(argc > 2) {
 		printf("Usage: mbox motd \"<your message>\"\n");
@@ -150,10 +138,7 @@ void *p;
 }
 
 int
-domboxdisplay(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+domboxdisplay(int argc,char *argv[],void *p)
 {
 	int i, j, len;
 	struct mbx *m;
@@ -176,10 +161,7 @@ void *p;
 }
 
 static int
-dotimeout(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dotimeout(int argc,char *argv[],void *p)
 {
 	return setuns(&Tiptimeout,"Tip connection timeout",argc,argv);
 }
@@ -188,8 +170,7 @@ void *p;
 /**********************************************************************/
 
 void
-listusers(network)
-FILE *network;
+listusers(FILE *network)
 {
 	FILE *outsave;
 
@@ -218,8 +199,7 @@ newmbx()
 }
 
 static int
-mbx_getname(m)
-struct mbx *m;
+mbx_getname(struct mbx *m)
 {
 #ifdef	AX25
 	char *cp;
@@ -314,10 +294,7 @@ struct mbx *m;
 
 /* Incoming mailbox session */
 void
-mbx_incom(s,t,p)
-int s;
-void *t;
-void *p;
+mbx_incom(int s,void *t,void *p)
 {
 	struct mbx *m;
 	struct usock *up;
@@ -385,8 +362,7 @@ void *p;
 }
 
 void
-exitbbs(m)
-struct mbx *m;
+exitbbs(struct mbx *m)
 {
 	closenotes(m);
 	free(m->to);
@@ -469,8 +445,7 @@ static struct cmds Mbcmds[] = {
  */
 static char twocmds[] = "slrd[";	/* S,L,R,D are two-letter commands */
 int
-mbx_parse(m)
-struct mbx *m;
+mbx_parse(struct mbx *m)
 {
 	char *cp;
 	int i;
@@ -516,11 +491,7 @@ struct mbx *m;
  * flushed and -2 returned.
  */
 int
-mbxrecvline(network,buf,len,escape)
-FILE *network;
-char *buf;
-int len;
-int escape;
+mbxrecvline(FILE *network,char *buf,int len,int escape)
 {
 	int c, cnt = 0, opt;
 	if(buf == NULL)
@@ -573,10 +544,7 @@ int escape;
 }
 
 int
-domboxbye(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+domboxbye(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 
@@ -590,10 +558,7 @@ void *p;
 	return -2;	/* signal that exitbbs() should be called */
 }
 static int
-dombhelp(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dombhelp(int argc,char *argv[],void *p)
 {
 	char buf[255];
 	int i;
@@ -611,11 +576,12 @@ void *p;
 				sprintf(buf,"%s/%s.hlp",Helpdir,Mbcmds[i].name);
 				break;
 			}
-	if(buf[0] == '\0')
+	if(buf[0] == '\0') {
 		if(*argv[0] == 'i')			/* INFO command */
 			sprintf(buf,"%s/info.hlp",Helpdir);
 		else
 			sprintf(buf,"%s/help.hlp",Helpdir);
+	}
 	if((fp = fopen(buf,READ_TEXT)) != NULL) {
 		sendfile(fp,Curproc->output,ASCII_TYPE,0);
 		fclose(fp);
@@ -626,10 +592,7 @@ void *p;
 }
 
 static int
-dochat(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dochat(int argc,char *argv[],void *p)
 {
 	char buf[8], *newargv[3];
 
@@ -648,10 +611,7 @@ void *p;
 }
 
 static int
-dosend(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dosend(int argc,char *argv[],void *p)
 {
 	int cccnt = 0, fail = 0;
 	char *host, *cp, fullfrom[MBXLINE], sigwork[LINELEN], *rhdr = NULL;
@@ -680,13 +640,14 @@ void *p;
 	if(m->stype == 'R' && !(m->sid & MBX_SID) &&
 	   mbx_reply(argc,argv,m,&cclist,&rhdr) == -1)
 		return 0;
-	if((cp = rewrite_address(m->to)) != NULL)
+	if((cp = rewrite_address(m->to)) != NULL) {
 	     if(strcmp(m->to,cp) != 0){
 		  m->origto = m->to;
 		  m->to = cp;
 	     }
 	     else
 		  free(cp);
+	}
 	if((m->origto != NULL || m->stype == 'R') && !(m->sid & MBX_SID))
 		printf("To: %s\n", m->to);
 	if(validate_address(m->to) == 0){
@@ -812,10 +773,7 @@ void *p;
 }
 
 static int
-dosid(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dosid(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 	char *cp;
@@ -846,10 +804,7 @@ void *p;
 }
 
 int
-dombescape(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dombescape(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 
@@ -873,10 +828,7 @@ void *p;
 }
 
 static int
-dodownload(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dodownload(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 	FILE *fp;
@@ -903,10 +855,7 @@ void *p;
 }
 
 static int
-dombupload(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dombupload(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 	FILE *fp;
@@ -955,10 +904,7 @@ void *p;
 }
 
 static int
-dowhat(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dowhat(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 	FILE *fp;
@@ -983,10 +929,7 @@ void *p;
 }
 
 static int
-dozap(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dozap(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 	char *file;
@@ -1005,10 +948,7 @@ void *p;
 }
 
 static int
-dosysop(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dosysop(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 	int c;
@@ -1036,10 +976,7 @@ void *p;
  * "*** LINKED to" command.
  */
 static int
-dostars(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dostars(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 	int anony = 1;
@@ -1072,10 +1009,7 @@ void *p;
 }
 
 static int
-doarea(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doarea(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 	FILE *fp;
@@ -1115,9 +1049,7 @@ void *p;
 
 /* subroutine to do the actual switch from one area to another */
 void
-changearea(m,area)
-struct mbx *m;
-char *area;
+changearea(struct mbx *m,char *area)
 {
 	closenotes(m);
 	m->nmsgs = m->newmsgs = m->current = 0;
@@ -1126,10 +1058,7 @@ char *area;
 }
 
 static int
-dombtelnet(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dombtelnet(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 	int s, len, i;
@@ -1167,10 +1096,7 @@ void *p;
 }
 
 static int
-dombfinger(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dombfinger(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 	char *host, *user = NULL, buf[8], *newargv[3];
@@ -1205,11 +1131,7 @@ void *p;
  * when the connection has been established unless it a null pointer.
  */
 int
-gw_connect(m,s,fsocket,len)
-struct mbx *m;
-int s;
-struct sockaddr *fsocket;
-int len;
+gw_connect(struct mbx *m,int s,struct sockaddr *fsocket,int len)
 {
 	int c;
 	char *cp;
@@ -1278,10 +1200,7 @@ int len;
 }
 
 static void
-gw_input(s,n,p)
-int s;
-void *n;
-void *p;
+gw_input(int s,void *n,void *p)
 {
 	int c;
 	char *cp;
@@ -1305,10 +1224,7 @@ void *p;
  * doing other things. 
  */
 static void
-gw_superv(null,proc,p)
-int null;
-void *proc;
-void *p;
+gw_superv(int null,void *proc,void *p)
 {
 	struct proc *parent;
 	struct mbx *m;
@@ -1327,8 +1243,7 @@ void *p;
 }
 
 static void
-gw_alarm(p)
-void *p;
+gw_alarm(void *p)
 {
 	struct gwalarm *gwa = (struct gwalarm *)p;
 	char oldbl;
@@ -1372,10 +1287,7 @@ void *p;
  * return 0
  */
 static int
-mbx_to(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+mbx_to(int argc,char *argv[],void *p)
 {
 	register char *cp;
 	int state, i;
@@ -1586,11 +1498,10 @@ void *p;
 /* This opens the data file and writes the mail header into it.
  * Returns 0 if OK, and -1 if not.
  */
+/* struct list *cclist;	list of carbon copy recipients */
+/* char *extra;		optional extra header lines */
 static int
-mbx_data(m,cclist,extra)
-struct mbx *m;
-struct list *cclist;	/* list of carbon copy recipients */
-char *extra;		/* optional extra header lines */
+mbx_data(struct mbx *m,struct list *cclist,char *extra)
 {
 	time_t t;
 	struct list *ap;
@@ -1651,8 +1562,7 @@ char *extra;		/* optional extra header lines */
  * message id generated by our system.
  */
 static int
-msgidcheck(string)
-char *string;
+msgidcheck(char *string)
 {
      FILE *fp;
      char buf[LINELEN], *cp;
@@ -1686,10 +1596,7 @@ char *string;
 */
 
 static int
-uuencode(infile,outfile,infilename)
-FILE *infile;
-FILE *outfile;
-char *infilename;
+uuencode(FILE *infile,FILE *outfile,char *infilename)
 {
   int n_read_so_far = 0, n_written_so_far = 0, in_chars, n, mode = 0755;
   int32 cnt = 0;

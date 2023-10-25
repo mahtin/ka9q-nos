@@ -2,7 +2,9 @@
  * Copyright 1991 Phil Karn, KA9Q
  */
 #include <stdio.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include "global.h"
 #include "proc.h"
 #include "mbuf.h"
@@ -35,7 +37,7 @@ static int send_pkt(int intno,uint8 *buffer,unsigned length);
 static INTERRUPT (*Pkvec[])() = { pkvec0,pkvec1,pkvec2 };
 static struct pktdrvr Pktdrvr[PK_MAX];
 static int Derr;
-char Pkt_sig[] = "PKT DRVR";	/* Packet driver signature */
+static char Pkt_sig[] = "PKT DRVR";	/* Packet driver signature */
 
 /*
  * Send routine for packet driver

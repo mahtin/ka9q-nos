@@ -18,7 +18,9 @@
 
 #include <time.h>
 #include <stdio.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include <bios.h>
 #include "global.h"
 #include "mbuf.h"

@@ -139,14 +139,14 @@ struct rr {
 extern struct proc *Dfile_updater;
 
 /* In domain.c */
-int add_nameserver(int32 address);
-void free_rr(struct rr *rrlp);
-struct rr *inverse_a(int32 ip_address);
-struct rr *resolve_rr(char *dname,uint16 dtype);
-char *resolve_a(int32 ip_address, int shorten);
-struct rr *resolve_mailb(char *name);
+extern int add_nameserver(int32 address);
+extern void free_rr(struct rr *rrlp);
+extern struct rr *inverse_a(int32 ip_address);
+extern struct rr *resolve_rr(char *dname,uint16 dtype);
+extern char *resolve_a(int32 ip_address, int shorten);
+extern struct rr *resolve_mailb(char *name);
 
 /* In domhdr.c: */
-int ntohdomain(struct dhdr *dhdr,struct mbuf **bpp);
+extern int ntohdomain(struct dhdr *dhdr,struct mbuf **bpp);
 
 #endif	/* _DOMAIN_H */

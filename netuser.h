@@ -42,13 +42,13 @@ struct connection {
 	struct socket remote;
 };
 /* In domain.c: */
-int32 resolve(char *name);
-int32 resolve_mx(char *name);
-char *resolve_a(int32 ip_address, int shorten);
+extern int32 resolve(char *name);
+extern int32 resolve_mx(char *name);
+extern char *resolve_a(int32 ip_address, int shorten);
 
 /* In netuser.c: */
-int32 aton(char *s);
-char *inet_ntoa(int32 a);
-char *pinet(struct socket *s);
+extern int32 aton(char *s);
+extern char *inet_ntoa(int32 a);
+extern char *pinet(struct socket *s);
 
 #endif	/* _NETUSER_H */

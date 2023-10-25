@@ -2,7 +2,9 @@
  * Copyright 1991 Phil Karn, KA9Q
  */
 #include <stdio.h>
+#ifdef MSDOS
 #include <conio.h>
+#endif
 #include "global.h"
 #include "mbuf.h"
 #include "session.h"
@@ -24,9 +26,7 @@
  * Returns the number of cooked characters ready to be read from the buffer.
  */
 int
-ttydriv(sp,c)
-struct session *sp;
-uint8 c;
+ttydriv(struct session *sp, uint8 c)
 {
 	int rval;
 	register struct ttystate *ttyp = &sp->ttystate;

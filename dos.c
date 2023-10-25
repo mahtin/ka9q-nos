@@ -6,7 +6,9 @@
  */
 
 #include <io.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include <errno.h>
 #include <fcntl.h>
 #include "stdio.h"

@@ -9,8 +9,6 @@
 
 extern unsigned Ibufsize;	/* Size of interrupt buffers to allocate */
 extern int Nibufs;		/* Number of interrupt buffers to allocate */
-extern long Pushdowns;		/* Total calls to pushdown() */
-extern long Pushalloc;		/* Calls to pushdown that call malloc() */
 
 /* Basic message buffer structure */
 struct mbuf {

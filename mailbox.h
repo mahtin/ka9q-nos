@@ -88,24 +88,24 @@ extern char Noperm[];
 extern char Nosock[];
 extern void (*Listusers)(FILE *network);
 
-int dombescape(int argc,char *argv[],void *p);
-int mbxrecvline(FILE *network,char *buf,int len,int escape);
-int gw_connect(struct mbx *m,int s,struct sockaddr *fsocket,int len);
+extern int dombescape(int argc,char *argv[],void *p);
+extern int mbxrecvline(FILE *network,char *buf,int len,int escape);
+extern int gw_connect(struct mbx *m,int s,struct sockaddr *fsocket,int len);
 
-void mbx_incom(int s,void *t,void *p);
-int domboxdisplay(int argc,char *argv[],void *p);
-struct mbx *newmbx(void);
-void exitbbs(struct mbx *m);
-int domboxbye(int argc,char *argv[],void *p);
-int mbx_parse(struct mbx *m);
-void changearea(struct mbx *m,char *area);
-char *rewrite_address(char *addr);
-void listusers(FILE *network);
+extern void mbx_incom(int s,void *t,void *p);
+extern int domboxdisplay(int argc,char *argv[],void *p);
+extern struct mbx *newmbx(void);
+extern void exitbbs(struct mbx *m);
+extern int domboxbye(int argc,char *argv[],void *p);
+extern int mbx_parse(struct mbx *m);
+extern void changearea(struct mbx *m,char *area);
+extern char *rewrite_address(char *addr);
+extern void listusers(FILE *network);
 
 /* In forward.c: */
-int dorevfwd(int argc,char *argv[],void *p);
-int dombtimer(int argc,char *argv[],void *p);
-int dombkick(int argc,char *argv[],void *p);
+extern int dorevfwd(int argc,char *argv[],void *p);
+extern int dombtimer(int argc,char *argv[],void *p);
+extern int dombkick(int argc,char *argv[],void *p);
 
 /* In tipmail.c */
 extern unsigned Tiptimeout;
