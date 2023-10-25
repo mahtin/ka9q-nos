@@ -130,13 +130,13 @@ struct icmplink {
 extern struct icmplink Icmplink[];
 
 /* In icmp.c: */
-void icmp_input(struct iface *iface,struct ip *ip,struct mbuf **bp,
+extern void icmp_input(struct iface *iface,struct ip *ip,struct mbuf **bp,
 	int rxbroadcast,int32 said);
-int icmp_output(struct ip *ip,struct mbuf *data,uint8 type,uint8 code,
+extern int icmp_output(struct ip *ip,struct mbuf *data,uint8 type,uint8 code,
 	union icmp_args *args);
 
 /* In icmphdr.c: */
-void htonicmp(struct icmp *icmp,struct mbuf **data);
-int ntohicmp(struct icmp *icmp,struct mbuf **bpp);
+extern void htonicmp(struct icmp *icmp,struct mbuf **data);
+extern int ntohicmp(struct icmp *icmp,struct mbuf **bpp);
 
 #endif	/* _ICMP_H */
