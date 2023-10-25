@@ -8,7 +8,8 @@ CFLAGS= -I. $(OS) $(CPU) $(WARNINGS) # -3 -O1 -Oi
 ARFLAGS= -rv
 LDFLAGS=
 
-LIBS =		libclients.a libservers.a libinternet.a libnet.a libppp.a libnetrom.a libax25.a libdump.a # libpc.a libpcasm.a
+LIBS =		libclients.a libservers.a libinternet.a libnet.a libppp.a libnetrom.a libax25.a libdump.a
+LIBSPC =	libpc.a libpcasm.a
 
 MAIN=		main.o config.o version.o session.o
 
@@ -57,7 +58,7 @@ allsource:
 
 clean:
 	rm -f $(OBJS)
-	rm -f $(LIBS)
+	rm -f $(LIBS) $(LIBSPC)
 	rm -f $(CMDS)
 
 libclients.a: $(LIBCLIENTS)
