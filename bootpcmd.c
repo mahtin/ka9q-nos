@@ -99,10 +99,7 @@ void *p;
 
 /* Start up bootp service */
 static int
-bp_Start (argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+bp_Start(int argc,char *argv[],void *p)
 {
 
         struct socket lsock;
@@ -145,10 +142,7 @@ void *p;
 
 /* Stop bootp service */
 static int
-bp_Stop (argc, argv, p)
-int argc;
-char *argv[];
-void *p;
+bp_Stop(int argc,char *argv[],void *p)
 {
 	time_t now;
 	char *usage = "bootpd stop\n";
@@ -173,10 +167,7 @@ void *p;
 
 
 static int
-bp_logFile (argc, argv, p)
-int argc;
-char *argv[];
-void *p;
+bp_logFile(int argc,char *argv[],void *p)
 {
 	int i;
 	time_t now;
@@ -219,10 +210,7 @@ void *p;
 
 
 static int
-bp_logScreen (argc, argv, p)
-int argc;
-char *argv[];
-void *p;
+bp_logScreen(int argc,char *argv[],void *p)
 {
 	char *usage = "bootpd logscreen [on | off]\n";	
 
@@ -247,10 +235,7 @@ void *p;
 
 
 static int
-bp_DomainNS (argc, argv, p)
-int argc;
-char *argv[];
-void *p;
+bp_DomainNS(int argc,char *argv[],void *p)
 {
 	int a0, a1, a2, a3;
 	int i;
@@ -295,10 +280,7 @@ void *p;
 
 
 static int
-bp_rmHost (argc, argv, p)
-int argc;
-char *argv[];
-void *p;
+bp_rmHost(int argc,char *argv[],void *p)
 {
 	int i;
 	struct host *hp = NULL;
@@ -362,10 +344,7 @@ dumphosts()
 
 
 static int
-bp_Host (argc, argv, p)
-int argc;
-char *argv[];
-void *p;
+bp_Host(int argc,char *argv[],void *p)
 {
 	struct host *hp;
 	int a0, a1, a2, a3;
@@ -444,10 +423,7 @@ void *p;
 
 
 static int	
-bp_Homedir (argc, argv, p)
-int argc;
-char *argv[];
-void *p;
+bp_Homedir(int argc,char *argv[],void *p)
 {
 	char *usage = "bootpd homedir [<name of home directory> | default]\n";
 
@@ -472,10 +448,7 @@ void *p;
 
 
 static int
-bp_DefaultFile (argc, argv, p)
-int argc;
-char *argv[];
-void *p;
+bp_DefaultFile(int argc,char *argv[],void *p)
 {
 	char *usage = "bootpd defaultfile [<name of default boot file> | default]\n";
 
@@ -499,10 +472,7 @@ void *p;
 
 
 static int
-bp_DynamicRange (argc, argv, p)
-int argc;
-char *argv[];
-void *p;
+bp_DynamicRange(int argc,char *argv[],void *p)
 {
 	int i0, i1, i2, i3;
 	int32 start, end;
@@ -569,10 +539,7 @@ void *p;
 
 
 static int
-bp_donothing (argc, argv, p)
-int argc;
-char *argv[];
-void *p;
+bp_donothing(int argc,char *argv[],void *p)
 {
         return (0);
 }
