@@ -154,7 +154,7 @@ struct q_elt *q_dequeue(struct q *queue);
 static void da_closeup(struct drange_desc *dr);
 static void dprint_addresses(struct drange_desc *dr);
 static int q_remove(struct q *source_queue,struct q_elt *qel);
-static void iptoa(int32 ipaddr,char ipstr[16]);
+static void iptoa(int32 ipaddr,char *ipstr);
 static void da_task(void);
 static int da_fill_reclaim(struct drange_desc *dr);
 static void da_do_verify(struct drange_desc *dr,int pendtime);
@@ -178,8 +178,8 @@ extern int bp_ReadingCMDFile;
 /*
  * Done serving a network.
  */
-da_done_net(iface)
-struct iface *iface;
+int
+da_done_net(struct iface *iface)
 {
         struct drange_desc *dr;
 
@@ -206,8 +206,7 @@ struct iface *iface;
  * Print the status of the da structures.
  */
 void
-da_status(iface)
-struct iface *iface;
+da_status(struct iface *iface)
 {
         struct drange_desc *dr;
 
@@ -255,8 +254,7 @@ da_shut()
  * Release resource for a network.
  */
 static void
-da_closeup(dr)
-struct drange_desc *dr;
+da_closeup(struct drange_desc *dr)
 {
         free(dr->dr_table);			/* Free the address table. */
         q_remove(&rtabq, (struct q_elt *)dr);	/* Dequeue the range descriptor. */
@@ -267,8 +265,7 @@ struct drange_desc *dr;
 
 /* This is only called from a command */
 static void
-dprint_addresses(dr)
-struct drange_desc *dr;
+dprint_addresses(struct drange_desc *dr)
 {
         struct daddr *da;
         char ipa[16];
@@ -313,8 +310,7 @@ struct drange_desc *dr;
  * Reclaimation routines.
  */
 static void
-da_runtask(p)
-void *p;
+da_runtask(void *p)
 {
 	stop_timer(&da_timer);
 	da_task();
@@ -402,8 +398,7 @@ da_task()
  * Enter the DONE state.  Can't get to the done state from the off state.
  */
 static void
-da_enter_done(dr)
-struct drange_desc *dr;
+da_enter_done(struct drange_desc *dr)
 {
 	char ipa[16], ipb[16];
 	
@@ -421,8 +416,7 @@ struct drange_desc *dr;
  * Enter the OFF state.
  */
 static void
-da_enter_off(dr)
-struct drange_desc *dr;
+da_enter_off(struct drange_desc *dr)
 {
 	char ipa[16], ipb[16];
 	
@@ -444,9 +438,7 @@ struct drange_desc *dr;
  * called again.
  */
 static void
-da_do_verify(dr, pendtime)
-struct drange_desc *dr;
-int pendtime;
+da_do_verify(struct drange_desc *dr,int pendtime)
 {
 	struct daddr *da, *dn;
 	struct iface *iface;
@@ -526,8 +518,7 @@ int pendtime;
  * to an ARP) within dr_time_addrretry tocks.
  */
 static int
-da_fill_reclaim(dr)
-struct drange_desc *dr;
+da_fill_reclaim(struct drange_desc *dr)
 {
         struct daddr *da;
         long now;
@@ -565,10 +556,11 @@ struct drange_desc *dr;
  * Assign an address.
  */
 int
-da_assign(iface, hwaddr, ipaddr)
-struct iface *iface;	/* -> Pointer to lnet struct of net on which to assign addr. */
-uint8	*hwaddr;	/* -> Pointer to hardware address of hosts. */
-int32	*ipaddr;	/* <- Address assigned to host. */
+da_assign(
+struct iface *iface,	/* -> Pointer to lnet struct of net on which to assign addr. */
+uint8	*hwaddr,	/* -> Pointer to hardware address of hosts. */
+int32	*ipaddr		/* <- Address assigned to host. */
+)
 {
 	struct drange_desc *dr;	
 	struct daddr *da;	
@@ -625,8 +617,7 @@ int32	*ipaddr;	/* <- Address assigned to host. */
  * Enter the reclaimation state.
  */
 static void
-da_enter_reclaim(dr)
-struct drange_desc *dr;
+da_enter_reclaim(struct drange_desc *dr)
 {
         char ipa[16], ipb[16];
 
@@ -645,9 +636,7 @@ struct drange_desc *dr;
  * Search for hwaddr on the used list, the reclaimation list, and the free list.
  */
 static int
-da_get_free_addr(dr, dap)
-struct drange_desc *dr;
-struct daddr **dap;
+da_get_free_addr(struct drange_desc *dr,struct daddr **dap)
 {
         *dap = (struct daddr *) q_dequeue(&(dr->dr_freeq));
         if(*dap == NULL) 
@@ -661,10 +650,7 @@ struct daddr **dap;
  * Search for hwaddr on the used list, the reclaimation list, and the free list.
  */
 static int
-da_get_old_addr(dr, hwaddr, dap)
-struct drange_desc *dr;
-uint8  	*hwaddr;
-struct daddr **dap;
+da_get_old_addr(struct drange_desc *dr,uint8 *hwaddr,struct daddr **dap)
 {
         struct daddr *da;
 
@@ -713,8 +699,7 @@ struct daddr **dap;
 
 #ifdef	notdef
 static void
-dprint_dr_record(dr)
-struct drange_desc *dr;
+dprint_dr_record(struct drange_desc *dr)
 {
         bp_log("Queue link   x%lx\n", dr->dr_next);
         bp_log("Pointer to network information         x%lx\n", dr->dr_iface);
@@ -745,8 +730,7 @@ struct drange_desc *dr;
  * Enter the critical reclaimation state.
  */
 static void
-da_enter_critical(dr)
-struct drange_desc *dr;
+da_enter_critical(struct drange_desc *dr)
 {
         char ipa[16], ipb[16];
 	char *ipc;
@@ -781,10 +765,11 @@ da_init()
  * Begin dynamic address service for a network.
  */
 int
-da_serve_net(iface, rstart, rend)
-struct iface *iface;		/* Pointer to lnet record. */
-int32 rstart;			/* First address in range. */
-int32 rend;			/* Last address in range. */
+da_serve_net(
+struct iface *iface,		/* Pointer to lnet record. */
+int32 rstart,			/* First address in range. */
+int32 rend			/* Last address in range. */
+)
 {
 	struct drange_desc *dr;	/* Pointer to the range descriptor. */
 	struct daddr *da;	/* Pointer to an address structure. */
@@ -876,8 +861,7 @@ int32 rend;			/* Last address in range. */
  *      Initialize simple Q descriptor
  */
 static void
-q_init(queue)
-struct q *queue;
+q_init(struct q *queue)
 {
         queue->head = 0;
         queue->tail = 0;
@@ -889,9 +873,7 @@ struct q *queue;
  *              Enqueue an element in a simple Q.
  */
 void
-q_enqueue(queue, elem)
-struct q *queue;
-struct q_elt *elem;
+q_enqueue(struct q *queue,struct q_elt * elem)
 {
         struct q_elt *last;
 
@@ -912,8 +894,7 @@ struct q_elt *elem;
  *      Pull an element off of the head of a Q.
  */
 struct q_elt *
-q_dequeue(queue)
-struct q *queue;
+q_dequeue(struct q *queue)
 {
         struct q_elt *elem;
 
@@ -935,9 +916,7 @@ struct q *queue;
  */
 
 static int
-q_remove(source_queue, qel)
-struct q *source_queue;
-struct q_elt *qel;
+q_remove(struct q *source_queue,struct q_elt *qel)
 {
         struct q_elt *prev, *e;
 
@@ -977,22 +956,18 @@ struct q_elt *qel;
  */
 
 static void
-iptoa(ipaddr, ipstr)
-int32 ipaddr;
-char ipstr[16];
+iptoa(int32 ipaddr, char *ipstr)
 {
 	char *tmpStr;
 
 	tmpStr = inet_ntoa(ipaddr);
-	strcpy(ipstr, tmpStr);
+	strncpy(ipstr, tmpStr, 16);
 }
 
 
 #ifdef	notdef
 static  void
-build_hex_string(fromstr, len, tostr)
-char *fromstr; int  len;
-char *tostr;
+build_hex_string(char *fromstr,int  len; char *tostr)
 {
 	int i;
 
