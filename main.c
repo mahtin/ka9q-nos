@@ -67,9 +67,7 @@ static void pass(char *,int len);
 static void passchar(int c);
 
 int
-main(argc,argv)
-int argc;
-char *argv[];
+main(int argc,char *argv[])
 {
 	FILE *fp;
 	struct daemon *tp;
@@ -365,10 +363,7 @@ int c;
 }
 /* Standard commands called from main */
 int
-dorepeat(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dorepeat(int argc,char *argv[],void *p)
 {
 	int32 interval;
 	int ret;
@@ -415,10 +410,7 @@ int c;
 }
 
 int
-dodelete(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dodelete(int argc,char *argv[],void *p)
 {
 	int i;
 
@@ -431,10 +423,7 @@ void *p;
 	return 0;
 }
 int
-dorename(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dorename(int argc,char *argv[],void *p)
 {
 	if(rename(argv[1],argv[2]) == -1){
 		printf("Can't rename %s",argv[1]);
@@ -443,10 +432,7 @@ void *p;
 	return 0;
 }
 int
-doexit(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doexit(int argc,char *argv[],void *p)
 {
 	int i;
 	time_t StopTime;
@@ -473,16 +459,15 @@ void *p;
 		fclose(Logfp);
 		Logfp = NULL;
 	}
+#if 0
 	clrscr();
+#endif
 	iostop();
 	exit(0);
 	return 0;	/* To satisfy lint */
 }
 int
-dohostname(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dohostname(int argc,char *argv[],void *p)
 {
 	if(argc < 2)
 		printf("%s\n",Hostname);
@@ -514,10 +499,7 @@ void *p;
 	return 0;
 }
 int
-dolog(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dolog(int argc,char *argv[],void *p)
 {
 	static char *logname;
 
@@ -543,10 +525,7 @@ void *p;
 	return 0;
 }
 int
-dohelp(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dohelp(int argc,char *argv[],void *p)
 {
 	register struct cmds *cmdp;
 	int i;
@@ -573,19 +552,13 @@ void *p;
  * Syntax: attach <hw type> <I/O address> <vector> <mode> <label> <bufsize> [<speed>]
  */
 int
-doattach(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doattach(int argc,char *argv[],void *p)
 {
 	return subcmd(Attab,argc,argv,p);
 }
 /* Manipulate I/O device parameters */
 int
-doparam(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doparam(int argc,char *argv[],void *p)
 {
 	register struct iface *ifp;
 	int param;
@@ -628,10 +601,7 @@ void *p;
 
 #ifndef	MSDOS
 int
-doescape(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doescape(int argc,char *argv[],void *p)
 {
 	if(argc < 2)
 		printf("0x%x\n",Escape);
@@ -639,15 +609,12 @@ void *p;
 		Escape = *argv[1];
 	return 0;
 }
-#endif	MSDOS
+#endif	/* !MSDOS */
 /* Generate system command packet. Synopsis:
  * remote [-p port#] [-k key] [-a hostname] <hostname> reset|exit|kickme
  */
 int
-doremote(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doremote(int argc,char *argv[],void *p)
 {
 	struct sockaddr_in fsock;
 	int s,c;
@@ -738,10 +705,7 @@ cleanup:
 
 /* Execute a command with output piped to more */
 int
-dopage(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dopage(int argc,char *argv[],void *p)
 {
 	FILE *fp;
 	FILE *outsav;
@@ -757,20 +721,14 @@ void *p;
 
 /* Set kernel process debug flag */
 int
-dodebug(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dodebug(int argc,char *argv[],void *p)
 {
 	setbool(&Kdebug,"kernel debug",argc,argv);
 	return 0;
 }
 /* Set temp file wipe-on-close flag */
 int
-dowipe(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dowipe(int argc,char *argv[],void *p)
 {
 	setbool(&_clrtmp,"tmp file wiping",argc,argv);
 	return 0;
@@ -778,10 +736,7 @@ void *p;
 
 /* No-op command */
 int
-donothing(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+donothing(int argc,char *argv[],void *p)
 {
 	return 0;
 }

@@ -47,8 +47,7 @@ char *Sestypes[] = {
  * If the index is out of range or unused, return NULL.
  */
 struct session *
-sessptr(cp)
-char *cp;
+sessptr(char *cp)
 {
 	unsigned int i;
 
@@ -64,10 +63,7 @@ char *cp;
 
 /* Select and display sessions */
 int
-dosession(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dosession(int argc, char *argv[],void *p)
 {
 	struct session *sp;
 	struct sockaddr fsocket;
@@ -128,10 +124,7 @@ void *p;
 }
 /* Resume current session, and wait for it */
 int
-go(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+go(int argc, char *argv[],void *p)
 {
 	struct session *sp;
 
@@ -145,10 +138,7 @@ void *p;
 	return 0;
 }
 int
-doclose(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doclose(int argc, char *argv[],void *p)
 {
 	struct session *sp;
 
@@ -164,10 +154,7 @@ void *p;
 	return 0;
 }
 int
-doreset(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doreset(int argc, char *argv[],void *p)
 {
 	struct session *sp;
 
@@ -187,10 +174,7 @@ void *p;
 	return 0;
 }
 int
-dokick(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dokick(int argc, char *argv[],void *p)
 {
 	struct session *sp;
 
@@ -209,19 +193,13 @@ void *p;
 }
 
 int
-dosfsize(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dosfsize(int argc, char *argv[],void *p)
 {
 	return setlong(&Sfsize,"Scroll file size",argc,argv);	
 }
 
 struct session *
-newsession(name,type,makecur)
-char *name;
-int type;
-int makecur;
+newsession(char *name,int type,int makecur)
 {
 	register struct session *sp;
 	int i;
@@ -258,8 +236,7 @@ int makecur;
 	return sp;
 }
 void
-freesession(sp)
-struct session *sp;
+freesession(struct session *sp)
 {
 	int i;
 
@@ -299,10 +276,7 @@ struct session *sp;
 }
 /* Control session recording */
 int
-dorecord(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dorecord(int argc, char *argv[],void *p)
 {
 	struct session *sp;
 	char *mode;
@@ -338,10 +312,7 @@ void *p;
 }
 /* Control file transmission */
 int
-doupload(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doupload(int argc, char *argv[],void *p)
 {
 	register struct session *sp;
 
@@ -376,10 +347,7 @@ void *p;
 }
 /* File uploading task */
 void
-upload(unused,sp1,p)
-int unused;
-void *sp1;
-void *p;
+upload(int unused,void *sp1,void *p)
 {
 	struct session *sp;
 	char *buf;
@@ -399,10 +367,10 @@ void *p;
 }
 
 /* Print prompt and read one character */
+/* prompt;	Optional prompt */
+/* int flush;	Flush queued input? */
 int
-keywait(prompt,flush)
-char *prompt;	/* Optional prompt */
-int flush;	/* Flush queued input? */
+keywait(char *prompt,int flush)
 {
 	int c;
 	int i;

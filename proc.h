@@ -82,28 +82,28 @@ extern struct ksig Ksig;
 	Curproc->signo = (val),setjmp(Curproc->sig))
 
 /* In  kernel.c: */
-void alert(struct proc *pp,int val);
-void chname(struct proc *pp,char *newname);
-void killproc(struct proc *pp);
-void killself(void);
-struct proc *mainproc(char *name);
-struct proc *newproc(char *name,unsigned int stksize,
+extern void alert(struct proc *pp,int val);
+extern void chname(struct proc *pp,char *newname);
+extern void killproc(struct proc *pp);
+extern void killself(void);
+extern struct proc *mainproc(char *name);
+extern struct proc *newproc(char *name,unsigned int stksize,
 	void (*pc)(int,void *,void *),
 	int iarg,void *parg1,void *parg2,int freeargs);
-void ksignal(void *event,int n);
-int kwait(void *event);
-void resume(struct proc *pp);
-int setsig(int val);
-void suspend(struct proc *pp);
+extern void ksignal(void *event,int n);
+extern int kwait(void *event);
+extern void resume(struct proc *pp);
+extern int setsig(int val);
+extern void suspend(struct proc *pp);
 
 /* In ksubr.c: */
-void chkstk(void);
-void kinit(void);
-unsigned phash(void *event);
-void psetup(struct proc *pp,int iarg,void *parg1,void *parg2,
+extern void chkstk(void);
+extern void kinit(void);
+extern unsigned phash(void *event);
+extern void psetup(struct proc *pp,int iarg,void *parg1,void *parg2,
 	void ((*pc)(int,void *,void *)) );
 #ifdef	AMIGA
-void init_psetup(struct proc *pp);
+extern void init_psetup(struct proc *pp);
 #endif
 
 /* Stack background fill value for high water mark checking */

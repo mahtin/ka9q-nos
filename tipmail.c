@@ -11,9 +11,9 @@
 #include "timer.h"
 #include "proc.h"
 #include "iface.h"
-#ifndef	UNIX
+/* #ifndef	UNIX */
 #include "n8250.h"
-#endif
+/* #endif */
 #include "asy.h"
 #include "socket.h"
 #include "usock.h"
@@ -41,9 +41,7 @@ unsigned Tiptimeout = 180;	/* Default tip inactivity timeout (seconds) */
 
 /* Input process */
 static void
-tip_in(dev,n1,n2)
-int dev;
-void *n1,*n2;
+tip_in(int dev,void *n1,void *n2)
 {
 	struct tipcb *tip;
 	struct mbuf *bp;
@@ -105,10 +103,7 @@ void *n1,*n2;
 }
 /* Start mailbox on serial line */
 int
-tipstart(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+tipstart(int argc,char *argv[],void *p)
 {
 	register struct iface *ifp;
 	register struct asy *ap;
@@ -223,10 +218,7 @@ void *p;
 	}
 }
 int
-tip0(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+tip0(int argc,char *argv[],void *p)
 {
 	register struct iface *ifp;
 	struct tipcb *tip, *prev = NULLTIP;
@@ -255,8 +247,7 @@ void *p;
 	return 0;
 }
 static void
-tipidle(t)
-void *t;
+tipidle(void *t)
 {
 	struct tipcb *tip;
 	static char *msg = "You have been idle too long. Please hang up.\r\n";
@@ -278,10 +269,7 @@ static int Stelnet = -1;
 
 /* Start up Telnet server */
 int
-telnet1(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+telnet1(int argc,char *argv[],void *p)
 {
 	struct sockaddr_in lsocket;
 	int s;
@@ -318,10 +306,7 @@ void *p;
 }
 /* Stop telnet server */
 int
-telnet0(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+telnet0(int argc,char *argv[],void *p)
 {
 	close_s(Stelnet);
 	Stelnet = -1;

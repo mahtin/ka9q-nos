@@ -4,7 +4,9 @@
 
 #include "global.h"
 #include <stdio.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include "mbuf.h"
 #include "dma.h"
 #include "sb.h"

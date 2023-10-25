@@ -29,19 +29,13 @@ int Icmp_trace;
 int Icmp_echo = 1;
 
 int
-doicmp(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doicmp(int argc,char*argv[],void *p)
 {
 	return subcmd(Icmpcmds,argc,argv,p);
 }
 
 static int
-doicmpstat(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doicmpstat(int argc,char *argv[],void *p)
 {
 	register int i;
 	int lim;
@@ -59,18 +53,12 @@ void *p;
 	return 0;
 }
 static int
-doicmptr(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doicmptr(int argc,char *argv[],void *p)
 {
 	return setbool(&Icmp_trace,"ICMP tracing",argc,argv);
 }
 static int
-doicmpec(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doicmpec(int argc,char *argv[],void *p)
 {
 	return setbool(&Icmp_echo,"ICMP echo response accept",argc,argv);
 }

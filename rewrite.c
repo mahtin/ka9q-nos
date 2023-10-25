@@ -39,8 +39,7 @@ char *Hdrs[] = {
  * will recurse with the new address.
  */
 char *
-rewrite_address(addr)
-char *addr;
+rewrite_address(char *addr)
 {
 	char *argv[10], buf[MBXLINE], *cp, *cp2, *retstr;
 	int cnt;
@@ -67,7 +66,7 @@ char *addr;
 		while(*cp != '\0' && *cp != ' ' && *cp != '\t')
 			if(*cp == '$') {
 				if(isdigit(*(++cp)))
-					if(argv[*cp - '0'-1] != '\0')
+					if(argv[*cp - '0'-1] != (char *)0)
 						strcat(cp2,argv[*cp - '0'-1]);
 				if(*cp == 'h' || *cp == 'H') /* Our hostname */
 					strcat(cp2,Hostname);
@@ -99,21 +98,21 @@ char *addr;
 /* Parse a string in the "Text: <user@host>" or "Text: user@host (Text)"
  * format for the address user@host.
  */
+/* int cont;		true if string is a continued header line */
 char *
-getaddress(string,cont)
-char *string;
-int cont;		/* true if string is a continued header line */
+getaddress(char * string, int cont)
 {
 	char *cp, *ap = NULL;
 	int par = 0;
 	if((cp = getname(string)) != NULL) /* Look for <> style address */
 	     return cp;
 	cp = string;
-	if(!cont)
+	if(!cont) {
 	     if((cp = strchr(string,':')) == NULL)	/* Skip the token */
 		  return NULL;
 	     else
 		  ++cp;
+        }
 	for(; *cp != '\0'; ++cp) {
 	     if(par && *cp == ')') {
 		  --par;
@@ -136,8 +135,7 @@ int cont;		/* true if string is a continued header line */
 }
 /* return the header type */
 int
-htype(s)
-char *s;
+htype(char *s)
 {
 	register char *p;
 	register int i;

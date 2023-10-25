@@ -123,7 +123,9 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <time.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include "global.h"
 #include "mbuf.h"
 #include "config.h"

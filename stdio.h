@@ -81,47 +81,47 @@ typedef unsigned size_t;
 #define	FULL_READ	0
 #define	PART_READ	1
 
-FILE *asyopen(char *name,char *mode);
-int close(int fd);
-FILE *displayopen(char *mode,int noscrol,int sfsize);
-int fblock(FILE *fp,int mode);
-int fclose(FILE *fp);
-void fcloseall(void);
-FILE *fdopen(int handle,char *mode);
-FILE *fdup(FILE *fp);
-int fflush(FILE *fp);
-int fgetc(FILE *fp);
-int _fgetc(FILE *fp);
-char *fgets(char *buf,int len,FILE *fp);
-void flushall(void);
-int fmode (FILE *fp,int mode);
-char *fpname(FILE *fp);
-int fprintf(FILE *fp,char *fmt,...);
-int fputc(int c,FILE *fp);
-int fputs(char *buf,FILE *fp);
-size_t fread(void *ptr,size_t size,size_t n,FILE *fp);
-FILE *freopen(char *name,char *mode,FILE *fp);
-int fseek(FILE *fp,long offset,int whence);
-long ftell(FILE *fp);
-size_t fwrite(void *ptr,size_t size,size_t n,FILE *fp);
-char *gets(char *s);
-void perror(const char *s);
-FILE *pipeopen(void);
-int printf(char *fmt,...);
-int puts(char *s);
-int rename(const char *,const char *);
-void setbuf(FILE *fp,char *buf);
-int seteol(FILE *fp,char *seq);
-int setvbuf(FILE *fp,char *buf,int type,int size);
-int sprintf(char *,char *, ...);
-int sscanf(char *,char *,...);	/* From regular library */
-FILE *tmpfile(void);
-char *tmpnam(char *);	/* From regular library */
-int ungetc(int c,FILE *fp);
-int unlink(const char *);	/* From regular library */
-int vfprintf(FILE *fp,char *fmt, void *args);
-int vprintf(char *fmt, void *args);
-int vsprintf(char *,char *,void *);
+extern FILE *asyopen(char *name,char *mode);
+extern int close(int fd);
+extern FILE *displayopen(char *mode,int noscrol,int sfsize);
+extern int fblock(FILE *fp,int mode);
+extern int fclose(FILE *fp);
+extern void fcloseall(void);
+extern FILE *fdopen(int handle,char *mode);
+extern FILE *fdup(FILE *fp);
+extern int fflush(FILE *fp);
+extern int fgetc(FILE *fp);
+extern int _fgetc(FILE *fp);
+extern char *fgets(char *buf,int len,FILE *fp);
+extern void flushall(void);
+extern int fmode (FILE *fp,int mode);
+extern char *fpname(FILE *fp);
+extern int fprintf(FILE *fp,char *fmt,...);
+extern int fputc(int c,FILE *fp);
+extern int fputs(char *buf,FILE *fp);
+extern size_t fread(void *ptr,size_t size,size_t n,FILE *fp);
+extern FILE *freopen(char *name,char *mode,FILE *fp);
+extern int fseek(FILE *fp,long offset,int whence);
+extern long ftell(FILE *fp);
+extern size_t fwrite(void *ptr,size_t size,size_t n,FILE *fp);
+extern char *gets(char *s);
+extern void perror(const char *s);
+extern FILE *pipeopen(void);
+extern int printf(char *fmt,...);
+extern int puts(char *s);
+extern int rename(const char *,const char *);
+extern void setbuf(FILE *fp,char *buf);
+extern int seteol(FILE *fp,char *seq);
+extern int setvbuf(FILE *fp,char *buf,int type,int size);
+extern int sprintf(char *,char *, ...);
+extern int sscanf(char *,char *,...);	/* From regular library */
+extern FILE *tmpfile(void);
+extern char *tmpnam(char *);	/* From regular library */
+extern int ungetc(int c,FILE *fp);
+extern int unlink(const char *);	/* From regular library */
+extern int vfprintf(FILE *fp,char *fmt, void *args);
+extern int vprintf(char *fmt, void *args);
+extern int vsprintf(char *,char *,void *);
 
 extern int _clrtmp;	/* Flag controlling wipe of temporary files on close */
 

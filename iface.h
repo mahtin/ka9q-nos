@@ -130,18 +130,18 @@ extern char Noipaddr[];
 extern struct mbuf *Hopper;
 
 /* In iface.c: */
-int bitbucket(struct iface *ifp,struct mbuf **bp);
-int if_detach(struct iface *ifp);
-struct iface *if_lookup(char *name);
-char *if_name(struct iface *ifp,char *comment);
-void if_tx(int dev,void *arg1,void *unused);
-struct iface *ismyaddr(int32 addr);
-void network(int i,void *v1,void *v2);
-int nu_send(struct mbuf **bpp,struct iface *ifp,int32 gateway,uint8 tos);
-int nu_output(struct iface *,uint8 *,uint8 *,uint16,struct mbuf **);
-int setencap(struct iface *ifp,char *mode);
+extern int bitbucket(struct iface *ifp,struct mbuf **bp);
+extern int if_detach(struct iface *ifp);
+extern struct iface *if_lookup(char *name);
+extern char *if_name(struct iface *ifp,char *comment);
+extern void if_tx(int dev,void *arg1,void *unused);
+extern struct iface *ismyaddr(int32 addr);
+extern void network(int i,void *v1,void *v2);
+extern int nu_send(struct mbuf **bpp,struct iface *ifp,int32 gateway,uint8 tos);
+extern int nu_output(struct iface *,uint8 *,uint8 *,uint16,struct mbuf **);
+extern int setencap(struct iface *ifp,char *mode);
 
 /* In config.c: */
-int net_route(struct iface *ifp,struct mbuf **bpp);
+extern int net_route(struct iface *ifp,struct mbuf **bpp);
 
 #endif	/* _IFACE_H */

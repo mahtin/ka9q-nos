@@ -8,7 +8,9 @@
 #include <fcntl.h>
 #include <errno.h>
 #define __IN_OPEN	1	/* Less stringent open() proto in io.h */
+#ifdef MSDOS
 #include <io.h>
+#endif
 #include "global.h"
 #include "stdio.h"
 #include "mbuf.h"

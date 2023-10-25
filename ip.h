@@ -122,7 +122,6 @@ struct rt_cache {
 	int32 target;
 	struct route *route;
 };
-extern struct rt_cache Rt_cache[];
 extern int32 Rtlookups;	/* Count of calls to rt_lookup() */
 extern int32 Rtchits;		/* Count of cache hits in rt_lookup() */
 
@@ -161,8 +160,6 @@ struct raw_ip {
 	int user;		/* User linkage */
 };
 
-extern struct raw_ip *Raw_ip;
-
 /* Transport protocol link table */
 struct iplink {
 	char proto;
@@ -178,40 +175,40 @@ extern int Tcp_interact[];
 extern int Ip_trace;
 
 /* In ip.c: */
-void ip_garbage(int drastic);
-void ip_recv(struct iface *iface,struct ip *ip,struct mbuf **bpp,
+extern void ip_garbage(int drastic);
+extern void ip_recv(struct iface *iface,struct ip *ip,struct mbuf **bpp,
 	int rxbroadcast, int32 said);
-void ipip_recv(struct iface *iface,struct ip *ip,struct mbuf **bp,
+extern void ipip_recv(struct iface *iface,struct ip *ip,struct mbuf **bp,
 	int rxbroadcast,int32 said);
-int ip_send(int32 source,int32 dest,char protocol,char tos,char ttl,
+extern int ip_send(int32 source,int32 dest,char protocol,char tos,char ttl,
 	struct mbuf **bpp,uint16 length,uint16 id,char df);
-struct raw_ip *raw_ip(int protocol,void (*r_upcall)(struct raw_ip *) );
-void del_ip(struct raw_ip *rrp);
-void rquench(struct iface *ifp,int drop);
+extern struct raw_ip *raw_ip(int protocol,void (*r_upcall)(struct raw_ip *) );
+extern void del_ip(struct raw_ip *rrp);
+extern void rquench(struct iface *ifp,int drop);
 
 /* In ipdump.c */
-void dumpip(struct iface *iface,struct ip *ip,struct mbuf *bp,int32 spi);
+extern void dumpip(struct iface *iface,struct ip *ip,struct mbuf *bp,int32 spi);
 
 /* In iproute.c: */
-void ipinit(void);
-uint16 ip_mtu(int32 addr);
-void encap_tx(int dev,void *arg1,void *unused);
-int ip_encap(struct mbuf **bpp,struct iface *iface,int32 gateway,uint8 tos);
-void ip_proc(struct iface *iface,struct mbuf **bpp);
-int ip_route(struct iface *i_iface,struct mbuf **bpp,int rxbroadcast);
-int32 locaddr(int32 addr);
-void rt_merge(int trace);
-struct route *rt_add(int32 target,unsigned int bits,int32 gateway,
+extern void ipinit(void);
+extern uint16 ip_mtu(int32 addr);
+extern void encap_tx(int dev,void *arg1,void *unused);
+extern int ip_encap(struct mbuf **bpp,struct iface *iface,int32 gateway,uint8 tos);
+extern void ip_proc(struct iface *iface,struct mbuf **bpp);
+extern int ip_route(struct iface *i_iface,struct mbuf **bpp,int rxbroadcast);
+extern int32 locaddr(int32 addr);
+extern void rt_merge(int trace);
+extern struct route *rt_add(int32 target,unsigned int bits,int32 gateway,
 	struct iface *iface,int32 metric,int32 ttl,uint8 private);
-int rt_drop(int32 target,unsigned int bits);
-struct route *rt_lookup(int32 target);
-struct route *rt_blookup(int32 target,unsigned int bits);
+extern int rt_drop(int32 target,unsigned int bits);
+extern struct route *rt_lookup(int32 target);
+extern struct route *rt_blookup(int32 target,unsigned int bits);
 
 /* In iphdr.c: */
-uint16 cksum(struct pseudo_header *ph,struct mbuf *m,uint16 len);
-uint16 eac(int32 sum);
-void htonip(struct ip *ip,struct mbuf **data,int cflag);
-int ntohip(struct ip *ip,struct mbuf **bpp);
+extern uint16 cksum(struct pseudo_header *ph,struct mbuf *m,uint16 len);
+extern uint16 eac(int32 sum);
+extern void htonip(struct ip *ip,struct mbuf **data,int cflag);
+extern int ntohip(struct ip *ip,struct mbuf **bpp);
 
 /* In either lcsum.c or pcgen.asm: */
 uint16 lcsum(uint16 *wp,uint16 len);

@@ -47,9 +47,7 @@ static char *grabtext(char *from,char *to,int marker);
    Uses isalnum macro to decide on alphanumeric/non-alnum status.
 */
 static char *
-findident(str, n, result)
-char *str, *result;
-int n;
+findident(char *str,int n,char *result)
 {
    int count; /* current identifier */
    count = 0;
@@ -71,9 +69,7 @@ int n;
 }
 /**************************************************************************/
 static void
-sendmsg(m,msgn)
-struct mbx *m;
-int msgn;
+sendmsg(struct mbx *m,int msgn)
 {
 	char buf[LINELEN], tb[LINELEN], *cp;
 	int len, rec = 0;
@@ -148,8 +144,7 @@ int msgn;
  * (yymmdd/hhmmz)
  */
 static char *
-mbxtime(line)
-char *line;
+mbxtime(char *line)
 {
      extern char *Months[];
      static char buf[13];
@@ -179,9 +174,7 @@ char *line;
 }
      
 static char *
-grabtext(from, to, marker)
-char *from, *to;
-int marker;
+grabtext(char *from,char *to, int marker)
 {
    while (*from!=marker)
       *to++ = *from++;
@@ -394,10 +387,7 @@ int bulletin;
  * for normal, "forward", forwarding.
  */
 int
-dorevfwd(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dorevfwd(int argc,char *argv[],void *p)
 {
 	char oldarea[64], *cp;
 	struct mbx *m;
@@ -552,10 +542,7 @@ char *line;
 }
 
 int
-dombtimer(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dombtimer(int argc,char *argv[],void *p)
 {
 	if(argc < 2){
 		printf("Forwarding timer: %lu/%lu\n",
@@ -571,10 +558,7 @@ void *p;
 }
 
 int
-dombkick(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dombkick(int argc,char *argv[],void *p)
 {
 	fwdtick(NULL);
 	return 0;
@@ -582,8 +566,7 @@ void *p;
 
 /* called when the forward timer expires or explicitly by dombkick() */
 static void
-fwdtick(v)
-void *v;
+fwdtick(void *v)
 {
 	char *cc, *cp;
 	struct mbx *m;
@@ -632,8 +615,7 @@ void *v;
 
 /* returns 1 if m->name matches the name of another connected mailbox. */
 static int
-isconnbbs(m)
-struct mbx *m;
+isconnbbs(struct mbx *m)
 {
 	int i;
 	for(i = 0; i < NUMMBX; ++i)
@@ -763,10 +745,7 @@ void *v1, *v2;
  * m->user is set to the socket number.
  */
 static int
-openconn(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+openconn(int argc,char *argv[],void *p)
 {
 	struct mbx *m;
 	struct sockaddr sock;

@@ -20,7 +20,9 @@
  */
 
 #include <stdio.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include "global.h"
 #include "dma.h"
 #include "nospc.h"
@@ -61,10 +63,9 @@ struct dma {
 struct dma *Dma;	/* List of active DMA descriptors */
 
 /* Allocate a block of memory suitable for DMA */
+/* int32 *physaddr;	Return physical address thru here */
 void *
-dma_malloc(physaddr,len)
-int32 *physaddr;	/* Return physical address thru here */
-unsigned short len;
+dma_malloc(int32 physaddr, unsigned short len)
 {
 	void *bufs[20],*aux;
 	int i,tries;
@@ -98,11 +99,11 @@ unsigned short len;
 }
 
 /* Convert user's virtual address to a physical address suitable for DMA */
+/* void *p;		User's virtual address */
+/* unsigned short len;	Length of user's buffer */
+/* int copy;		!0 => Copy user buffer to aux buffer if allocated */
 unsigned long
-dma_map(p,len,copy)
-void *p;		/* User's virtual address */
-unsigned short len;	/* Length of user's buffer */
-int copy;	/* !0 => Copy user buffer to aux buffer if allocated */
+dma_map(void *p,unsigned short len,int copy)
 {
 	void *bufs[20],*aux;
 	int i,tries;
@@ -161,10 +162,9 @@ int copy;	/* !0 => Copy user buffer to aux buffer if allocated */
  * buffer's virtual address. We free any auxiliary buffers, after copying them
  * out (if requested) and then if QEMM is running, call the unlock function.
  */
+/* int copy;	!0 => Copy aux buffer to user buffer, if mapped */
 void
-dma_unmap(p,copy)
-void *p;
-int copy;	/* !0 => Copy aux buffer to user buffer, if mapped */
+dma_unmap(void *p,int copy)
 {
 	struct dma *dmap;
 
@@ -207,9 +207,7 @@ int copy;	/* !0 => Copy aux buffer to user buffer, if mapped */
  * needed to unlock is the address and length, which the user will supply.
  */
 unsigned long
-dmalock(p,len)
-void *p;
-unsigned short len;
+dmalock(void *p,unsigned short len)
 {
 	struct dds ddsp;
 	union REGS regs;
@@ -245,9 +243,7 @@ unsigned short len;
 }
 /* Release memory that has been locked for DMA */
 unsigned long
-dmaunlock(physaddr,len)
-unsigned long physaddr;
-unsigned short len;
+dmaunlock(unsigned long physaddr,unsigned short len)
 {
 	union REGS regs;
 	struct SREGS segregs;
@@ -272,9 +268,9 @@ unsigned short len;
 	return 0;
 }
 /* Disable QEMM DMA translation */
+/* int chan;	DMA channel number */
 int
-dis_dmaxl(chan)
-int chan;	/* DMA channel number */
+dis_dmaxl(int chan)
 {
 	union REGS regs;
 	struct SREGS segregs;
@@ -293,8 +289,7 @@ int chan;	/* DMA channel number */
 
 /* Re-enable QEMM DMA translation */
 int
-ena_dmaxl(chan)
-int chan;
+ena_dmaxl(int chan)
 {
 	union REGS regs;
 	struct SREGS segregs;
@@ -312,12 +307,9 @@ int chan;
 }
 
 /* Set up a 8237 DMA controller channel to point to a specified buffer */
+/* int mode;	Read/write, etc */
 int
-setup_dma(chan,physaddr,length,mode)
-int chan;
-int32 physaddr;
-uint16 length;
-int mode;	/* Read/write, etc */
+setup_dma(int chan,int32 physaddr,uint16 length,int mode)
 {
 	int dmaport;
 	int i_state;
@@ -370,8 +362,7 @@ int mode;	/* Read/write, etc */
 
 /* Return current count on specified DMA channel */
 uint16
-dma_cnt(chan)
-int chan;
+dma_cnt(int chan)
 {
 	int dmaport;
 	uint16 bytecount;
@@ -390,8 +381,7 @@ int chan;
 
 /* Disable DMA on specified channel, return previous status */
 int
-dma_disable(chan)
-int chan;
+dma_disable(int chan)
 {
 	if(chan < 4){
 		outportb(DMA1BASE+DMA_MASK, DMA_DISABLE|chan);
@@ -402,8 +392,7 @@ int chan;
 }
 /* Enable DMA on specified channel */
 int
-dma_enable(chan)
-int chan;
+dma_enable(int chan)
 {
 	if(chan < 4){
 		outportb(DMA1BASE+DMA_MASK, DMA_ENABLE|chan);

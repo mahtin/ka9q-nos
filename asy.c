@@ -42,10 +42,7 @@ static int asy_detach(struct iface *ifp);
  *		'r' for rlsd (cd) detection
  */
 int
-asy_attach(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+asy_attach(int argc,char *argv[],void *p)
 {
 	register struct iface *ifp;
 	int dev;
@@ -147,8 +144,7 @@ void *p;
 }
 
 static int
-asy_detach(ifp)
-struct iface *ifp;
+asy_detach(struct iface *ifp)
 {
 	struct asymode *ap;
 

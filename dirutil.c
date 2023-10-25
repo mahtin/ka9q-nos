@@ -7,8 +7,10 @@
  */
 
 #include <stdio.h>
-#include <dir.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
+#include <dir.h>
 #include <stdlib.h>
 #include "global.h"
 #include "dirutil.h"

@@ -2,17 +2,21 @@
  * Copyright 1991 Phil Karn, KA9Q
  */
 #include <stdio.h>
+#ifdef MSDOS
 #include <conio.h>
+#endif
+#ifdef MSDOS
 #include <dir.h>
 #include <dos.h>
 #include <io.h>
+#include <process.h>
+#include <bios.h>
+#endif
 #include <sys/stat.h>
 #include <string.h>
-#include <process.h>
 #include <fcntl.h>
 /*#include <alloc.h> */
 #include <stdarg.h>
-#include <bios.h>
 #include <time.h>
 #include "global.h"
 #include "mbuf.h"

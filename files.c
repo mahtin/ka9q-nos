@@ -52,7 +52,7 @@ char *Popusers = "./popusers";		/* POP user and passwd file */
 char *Signature = "./signatur"; /* Mail signature file directory */
 char *Forwardfile = "./forward.bbs"; /* Mail forwarding file */
 char *Historyfile = "./history"; /* Message ID history file */
-Char *Tmpdir = "/tmp";
+char *Tmpdir = "/tmp";
 #define	SEPARATOR	"/"
 char Eol[] = "\n";
 #endif
@@ -78,7 +78,7 @@ char *Popusers = "TCPIP:/popusers";	/* POP user and passwd file */
 char *Signature = "TCPIP:spool/signatur"; /* Mail signature file directory */
 char *Forwardfile = "TCPIP:spool/forward.bbs"; /* Mail forwarding file */
 char *Historyfile = "TCPIP:spool/history"; /* Message ID history file */
-Char *Tmpdir = "TCPIP:tmp";
+char *Tmpdir = "TCPIP:tmp";
 #define	SEPARATOR	"/"
 char Eol[] = "\r\n";
 #endif
@@ -104,7 +104,7 @@ char *Popusers = "Mikes Hard Disk:/popusers";	/* POP user and passwd file */
 char *Signature = "Mikes Hard Disk:spool/signatur"; /* Mail signature file directory */
 char *Forwardfile = "Mikes Hard Disk:spool/forward.bbs"; /* Mail forwarding file */
 char *Historyfile = "Mikes Hard Disk:spool/history"; /* Message ID history file */
-Char *Tmpdir = "Mikes Hard Disk:tmp";
+char *Tmpdir = "Mikes Hard Disk:tmp";
 #define	SEPARATOR	"/"
 char Eol[] = "\r";
 #endif

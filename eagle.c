@@ -15,7 +15,9 @@
  */
 
 #include <stdio.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include "global.h"
 #include "mbuf.h"
 #include "iface.h"

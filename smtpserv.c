@@ -268,7 +268,7 @@ loop:	if (fgets(buf,sizeof(buf),network) == NULL) {
 
 		list = NULL;
 		/* rewrite address if possible */
-		if((newaddr = rewrite_address(arg)) != NULL)
+		if((newaddr = rewrite_address(arg)) != NULL) {
 			if(strcmp(newaddr,arg) == 0) {
 				free(newaddr);
 				newaddr = NULL;
@@ -277,14 +277,16 @@ loop:	if (fgets(buf,sizeof(buf),network) == NULL) {
 				strcpy(buf,newaddr);
 				arg = buf;
 			}
+		}
 		list = NULL;
 		expandalias(&list,arg);
-		if (strcmp(list->val,arg) == 0 && list->next == NULL)
+		if (strcmp(list->val,arg) == 0 && list->next == NULL) {
 			if(newaddr == NULL) {
 				(void) fprintf(network,Noalias,arg);
 				del_list(list);
 				break;
 			}
+		}
 		ap = list;
 		while (ap->next != NULL) {
 			(void) fprintf(network,"250-%s\n",ap->val);
@@ -558,11 +560,12 @@ long *t;
 	/* Read the system time */
 	ltm = localtime(t);
 
-	if (*tz == '\0')
+	if (*tz == '\0') {
 		if ((p = getenv("TZ")) == NULL)
 			strcpy(tz,"UTC");
 		else
 			strncpy(tz,p,3);
+        }
 
 	/* rfc 822 format */
 	sprintf(str,"%s, %.2d %s %02d %02d:%02d:%02d %.3s\n",

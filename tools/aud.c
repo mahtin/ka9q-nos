@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 #define	DMASIZE	16384
-main()
+int
+main(int argc,char *argv[])
 {
 	unsigned char buf[DMASIZE];
 	double x,y;

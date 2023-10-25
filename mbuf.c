@@ -2,7 +2,9 @@
  * Copyright 1991 Phil Karn, KA9Q
  */
 #include <stdio.h>
+#ifdef MSDOS
 #include <dos.h>	/* TEMP */
+#endif
 #include "global.h"
 #include "mbuf.h"
 #include "proc.h"

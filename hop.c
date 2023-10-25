@@ -394,12 +394,7 @@ int c;
  * UDP probes
  */
 static int
-geticmp(s,lport,fport,sender,type,code)
-int s;
-uint16 lport;
-uint16 fport;
-int32 *sender;
-char *type,*code;
+geticmp(int s,uint16 lport,uint16 fport,int32 *sender,char *type,char *code)
 {
 	int size;
 	struct icmp icmphdr;

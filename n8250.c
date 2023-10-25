@@ -10,7 +10,9 @@
  * Apr '92	Control signals redone again by Phil Karn
  */
 #include <stdio.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include <errno.h>
 #include "global.h"
 #include "mbuf.h"

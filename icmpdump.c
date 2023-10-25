@@ -11,12 +11,9 @@
 #include "ip.h"
 
 /* Dump an ICMP header */
+/* int check;		If 0, bypass checksum verify */
 void
-icmp_dump(fp,bpp,source,dest,check)
-FILE *fp;
-struct mbuf **bpp;
-int32 source,dest;
-int check;		/* If 0, bypass checksum verify */
+icmp_dump(FILE *fp,struct mbuf **bpp,int32 source,int32 dest,int check)
 {
 	struct icmp icmp;
 	uint16 csum;

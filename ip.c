@@ -9,8 +9,8 @@
 #include "timer.h"
 #include "internet.h"
 #include "netuser.h"
-#include "iface.h"
-#include "pktdrvr.h"
+/*#include "iface.h"*/
+/*#include "pktdrvr.h"*/
 #include "ip.h"
 #include "icmp.h"
 

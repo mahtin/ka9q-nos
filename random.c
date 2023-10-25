@@ -2,7 +2,9 @@
  * This is inherently machine dependent code
  */
 #include "stdio.h"
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include "global.h"
 #include "timer.h"
 #include "md5.h"

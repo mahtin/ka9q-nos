@@ -1,6 +1,12 @@
 /* MD5.C - RSA Data Security, Inc., MD5 message-digest algorithm */
 
+#if MSDOS
 #include <mem.h>
+#else
+/* this isn't correct - but it will allow it to compile */
+extern void memcpy(void *,const void *,unsigned long);
+extern void memset(void *,int,unsigned long);
+#endif
 
 #ifdef	CPU386
 #pragma inline

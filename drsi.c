@@ -40,7 +40,9 @@
  */
 
 #include <stdio.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include <time.h>
 #include "global.h"
 #include "mbuf.h"
@@ -98,8 +100,7 @@ int ticks;
 /* Master interrupt handler.  One interrupt at a time is handled.
  * here. Service routines are called from here.
  */
-INTERRUPT (far *(drint)(dev))()
-int dev;
+INTERRUPT (far *(drint)(int dev))()
 {
 	register char st;
 	register uint16 pcbase, i;
@@ -180,8 +181,7 @@ yuk:
  * issue a reset command for it, and return.
  */
 static void
-drexint(hp)
-register struct drchan *hp;
+drexint(register struct drchan *hp)
 {
 	register int base = hp->base;
 	char st;
@@ -243,8 +243,7 @@ register struct drchan *hp;
 
 /* Receive Finite State Machine - dispatcher */
 static void
-rx_fsm(hp)
-struct drchan *hp;
+rx_fsm(struct drchan *hp)
 {
 	int i_state;
 
@@ -258,8 +257,7 @@ struct drchan *hp;
  * Receive ENABLE state processor
  */
 static void
-drrx_enable(hp)
-struct drchan *hp;
+drrx_enable(struct drchan *hp)
 {
 	register uint16 base = hp->base;
 
@@ -281,8 +279,7 @@ struct drchan *hp;
  * Receive ACTIVE state processor
  */
 static void
-drrx_active(hp)
-struct drchan *hp;
+drrx_active(struct drchan *hp)
 {
 	register uint16 base = hp->base;
 	unsigned char rse,st;
@@ -372,8 +369,7 @@ struct drchan *hp;
  * TX finite state machine - dispatcher
  */
 static void
-tx_fsm(hp)
-struct drchan *hp;
+tx_fsm(struct drchan *hp)
 {
 	int i_state;
 
@@ -388,8 +384,7 @@ struct drchan *hp;
  * Transmit IDLE transmit state processor
  */
 static void
-drtx_idle(hp)
-struct drchan *hp;
+drtx_idle(struct drchan *hp)
 {
 	register uint16 base;
 
@@ -422,8 +417,7 @@ struct drchan *hp;
  * Transmit DEFER state processor
  */
 static void
-drtx_defer(hp)
-struct drchan *hp;
+drtx_defer(struct drchan *hp)
 {
 	register uint16 base = hp->base;
 
@@ -480,8 +474,7 @@ struct drchan *hp;
  * Transmit RRTS state processor
  */
 static void
-drtx_rrts(hp)
-struct drchan *hp;
+drtx_rrts(struct drchan *hp)
 {
 	register uint16 base = hp->base;
 
@@ -500,8 +493,7 @@ struct drchan *hp;
  * Transmit TFIRST state processor
  */
 static void
-drtx_tfirst(hp)
-struct drchan *hp;
+drtx_tfirst(struct drchan *hp)
 {
 	register uint16 base = hp->base;
 	char c;
@@ -532,8 +524,7 @@ struct drchan *hp;
  * Transmit ACTIVE state processor
  */
 static void
-drtx_active(hp)
-struct drchan *hp;
+drtx_active(struct drchan *hp)
 {
 	if(hp->drtx_cnt-- > 0){
 		/* Send next character */
@@ -552,8 +543,7 @@ struct drchan *hp;
  * Transmit FLAGOUT state processor
  */
 static void
-drtx_flagout(hp)
-struct drchan *hp;
+drtx_flagout(struct drchan *hp)
 {
 	/* Arrive here after CRC sent and Tx interrupt fires.
 	 * Post a wake for ENDDELAY
@@ -570,8 +560,7 @@ struct drchan *hp;
  * Transmit DOWNTX state processor
  */
 static void
-drtx_downtx(hp)
-struct drchan *hp;
+drtx_downtx(struct drchan *hp)
 {
 	register int base = hp->base;
 
@@ -592,9 +581,7 @@ struct drchan *hp;
     
 /* Write CTC register */
 static void
-write_ctc(base, reg, val)
-uint16 base;
-uint8 reg,val;
+write_ctc(uint16 base,uint8 reg,uint8 val)
 {
 	int i_state;
 	
@@ -607,9 +594,7 @@ uint8 reg,val;
 
 /* Read CTC register */
 static char
-read_ctc(base, reg)
-uint16 base;
-uint8 reg;
+read_ctc(uint16 base,uint8 reg)
 {
 	uint8 c;
 	uint16 i;
@@ -628,8 +613,7 @@ uint8 reg;
 
 /* Initialize dr controller parameters */
 static int
-drchanparam(hp)
-register struct drchan *hp;
+drchanparam(register struct drchan *hp)
 {
 	uint16 tc;
 	long br;
@@ -737,8 +721,7 @@ register struct drchan *hp;
  *
  */
 static void
-drinitctc(port)
-unsigned port;
+drinitctc(unsigned port)
 {
 	long i;
 
@@ -798,9 +781,7 @@ unsigned port;
  * argv[10]: Second IP address, optional (defaults to Ip_addr)
  */
 int
-dr_attach(argc,argv)
-int argc;
-char *argv[];
+dr_attach(int argc,char *argv[])
 {
 	register struct iface *if_pca,*if_pcb;
 	struct drchan *hp;
@@ -978,8 +959,7 @@ char *argv[];
 
 /* Shut down iface */
 static int
-dr_stop(iface)
-struct iface *iface;
+dr_stop(struct iface *iface)
 {
 	uint16 dev;
 
@@ -1032,10 +1012,7 @@ struct mbuf **bpp
 
 /* display DRSI Channel stats */
 int
-dodrstat(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dodrstat(int argc,char *argv[],void *p)
 {
 	struct drchan *hp0, *hp1;
 	int i;
@@ -1072,11 +1049,7 @@ void *p;
 
 /* Subroutine to set kiss params in channel tables */
 static int32
-dr_ctl(iface,cmd,set,val)
-struct iface *iface;
-int cmd;
-int set;
-int32 val;
+dr_ctl(struct iface *iface,int cmd,int set,int32 val)
 {
 	struct drchan *hp;
 	hp = &Drchan[iface->dev];

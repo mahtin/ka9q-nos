@@ -27,9 +27,7 @@ struct udp_cb *Udps;
  * incoming datagrams.
  */
 struct udp_cb *
-open_udp(lsocket,r_upcall)
-struct socket *lsocket;
-void (*r_upcall)();
+open_udp(struct socket *lsocket,void (*r_upcall)(struct iface *iface,struct udp_cb *,int))
 {
 	register struct udp_cb *up;
 
@@ -49,17 +47,16 @@ void (*r_upcall)();
 }
 
 /* Send a UDP datagram */
-int
-send_udp(
-struct socket *lsocket,		/* Source socket */
-struct socket *fsocket,		/* Destination socket */
-char tos,			/* Type-of-service for IP */
-char ttl,			/* Time-to-live for IP */
-struct mbuf **bpp,		/* Data field, if any */
-uint16 length,			/* Length of data field */
-uint16 id,			/* Optional ID field for IP */
-char df				/* Don't Fragment flag for IP */
-){
+/* struct socket *lsocket,	Source socket */
+/* struct socket *fsocket,	Destination socket */
+/* char tos,			Type-of-service for IP */
+/* char ttl,			Time-to-live for IP */
+/* struct mbuf **bpp,		Data field, if any */
+/* uint16 length,		Length of data field */
+/* uint16 id,			Optional ID field for IP */
+/* char df			Don't Fragment flag for IP */
+int send_udp(struct socket *lsocket,struct socket *fsocket,char tos,char ttl,struct mbuf **bpp,uint16 length,uint16 id,char df)
+{
 	struct pseudo_header ph;
 	struct udp udp;
 	int32 laddr;
@@ -93,11 +90,10 @@ char df				/* Don't Fragment flag for IP */
 	return (int)length;
 }
 /* Accept a waiting datagram, if available. Returns length of datagram */
+/* struct socket *fsocket;	Place to stash incoming socket */
+/* struct mbuf **bp;		Place to stash data packet */
 int
-recv_udp(up,fsocket,bp)
-register struct udp_cb *up;
-struct socket *fsocket;		/* Place to stash incoming socket */
-struct mbuf **bp;		/* Place to stash data packet */
+recv_udp(struct udp_cb *up,struct socket *fsocket,struct mbuf **bp)
 {
 	struct socket sp;
 	struct mbuf *buf;
@@ -132,8 +128,7 @@ struct mbuf **bp;		/* Place to stash data packet */
 }
 /* Delete a UDP control block */
 int
-del_udp(conn)
-struct udp_cb *conn;
+del_udp(struct udp_cb *conn)
 {
 	struct mbuf *bp;
 	register struct udp_cb *up;
@@ -244,8 +239,7 @@ int32 said
  * searches.
  */
 static struct udp_cb *
-lookup_udp(socket)
-struct socket *socket;
+lookup_udp(struct socket *socket)
 {
 	register struct udp_cb *up;
 	struct udp_cb *uplast = NULL;
@@ -268,8 +262,7 @@ struct socket *socket;
 
 /* Attempt to reclaim unused space in UDP receive queues */
 void
-udp_garbage(red)
-int red;
+udp_garbage(int drastic)
 {
 	register struct udp_cb *udp;
 

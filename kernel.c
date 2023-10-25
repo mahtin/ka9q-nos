@@ -4,7 +4,9 @@
 #if	defined(PROCLOG) || defined(PROCTRACE)
 #include <stdio.h>
 #endif
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include <setjmp.h>
 #include "global.h"
 #include "mbuf.h"

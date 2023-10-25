@@ -93,7 +93,7 @@ static int compare_rr_list(struct rr *rrlp,struct rr *target_rrp);
 static struct rr *copy_rr(struct rr *rrp);
 static struct rr *copy_rr_list(struct rr *rrlp);
 static struct rr *make_rr(int source,
-	char *dname,uint16 class,uint16 type,int32 ttl,uint16 rdl,void *data);
+	char *dname,uint16 dclass,uint16 dtype,int32 ttl,uint16 rdl,void *data);
 
 static void dcache_add(struct rr *rrlp);
 static void dcache_drop(struct rr *rrp);
@@ -106,7 +106,7 @@ static struct rr *dfile_search(struct rr *rrlp);
 static void dfile_update(int s,void *unused,void *p);
 
 static void dumpdomain(struct dhdr *dhp,int32 rtt);
-static int dns_makequery(uint16 op,struct rr *rrp,
+static int dns_makequery(uint16 op,struct rr *srrp,
 	uint8 *buffer,uint16 buflen);
 static int dns_query(struct rr *rrlp);
 
@@ -140,28 +140,19 @@ static struct cmds Dcachecmds[] = {
 };
 
 int
-dodomain(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dodomain(int argc,char *argv[],void *p)
 {
 	return subcmd(Dcmds,argc,argv,p);
 }
 
 static int
-docache(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+docache(int argc,char *argv[],void *p)
 {
 	return subcmd(Dcachecmds,argc,argv,p);
 }
 
 static int
-dosuffix(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dosuffix(int argc,char *argv[],void *p)
 {
 	if(argc < 2){
 		if(Dsuffix != NULL)
@@ -174,19 +165,13 @@ void *p;
 }
 
 static int
-docacheclean(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+docacheclean(int argc,char *argv[],void *p)
 {
 	return setbool( &Dfile_clean, "discard expired records", argc,argv );
 }
 
 static int
-docachelist(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+docachelist(int argc,char *argv[],void *p)
 {
 	struct rr *rrp;
 	struct session *sp;
@@ -229,10 +214,7 @@ void *p;
 }
 
 static int
-docachesize(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+docachesize(int argc,char *argv[],void *p)
 {
 	int newsize;
 	int oldsize;
@@ -251,17 +233,13 @@ void *p;
 }
 
 static int
-docachewait(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+docachewait(int argc,char *argv[],void *p)
 {
 	return setint( &Dfile_wait_relative, "time before file update (seconds)", argc,argv );
 }
 
 static void
-dlist_add(dp)
-register struct dserver *dp;
+dlist_add(register struct dserver *dp)
 {
 	dp->prev = NULL;
 	dp->next = Dservers;
@@ -271,8 +249,7 @@ register struct dserver *dp;
 }
 
 static void
-dlist_drop(dp)
-register struct dserver *dp;
+dlist_drop(register struct dserver *dp)
 {
 	if(dp->prev != NULL)
 		dp->prev->next = dp->next;
@@ -283,10 +260,7 @@ register struct dserver *dp;
 }
 
 static int
-dodnsadd(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dodnsadd(int argc,char *argv[],void *p)
 {
 	int32 address;
 
@@ -297,8 +271,7 @@ void *p;
 	return add_nameserver(address);
 }
 int
-add_nameserver(address)
-int32 address;
+add_nameserver(int32 address)
 {
 	struct dserver *dp;
 
@@ -312,10 +285,7 @@ int32 address;
 }
 
 static int
-dodnsdrop(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dodnsdrop(int argc,char *argv[],void *p)
 {
 	struct dserver *dp;
 	int32 addr;
@@ -336,10 +306,7 @@ void *p;
 }
 
 static int
-dodnslist(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dodnslist(int argc,char *argv[],void *p)
 {
 	register struct dserver *dp;
 
@@ -354,10 +321,7 @@ void *p;
 }
 
 static int
-dodnsquery(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dodnsquery(int argc,char *argv[],void *p)
 {
 	struct rr *rrp;
 	struct rr *result_rrlp;
@@ -413,19 +377,13 @@ void *p;
 }
 
 static int
-dodnsretry(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dodnsretry(int argc,char *argv[],void *p)
 {
 	return setint( &Dserver_retries, "server retries", argc,argv );
 }
 
 static int
-dodnstrace(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+dodnstrace(int argc,char *argv[],void *p)
 {
 	return setbool(&Dtrace,"server trace",argc,argv);
 }
@@ -436,8 +394,7 @@ void *p;
  **/
 
 static char *
-dtype(value)
-int value;
+dtype(int value)
 {
 	static char buf[10];
 
@@ -452,8 +409,7 @@ int value;
  * returns number of expired records.
  */
 static int
-check_ttl(rrlp)
-register struct rr *rrlp;
+check_ttl(register struct rr *rrlp)
 {
 	int count = 0;
 
@@ -469,8 +425,7 @@ register struct rr *rrlp;
  * returns 0 if match, nonzero otherwise.
  */
 static int
-compare_rr(search_rrp,target_rrp)
-register struct rr *search_rrp,*target_rrp;
+compare_rr(register struct rr *search_rrp,register struct rr *target_rrp)
 {
 	int i;
 
@@ -547,8 +502,7 @@ register struct rr *search_rrp,*target_rrp;
 }
 
 static int
-compare_rr_list(rrlp,target_rrp)
-register struct rr *rrlp,*target_rrp;
+compare_rr_list(register struct rr *rrlp,register struct rr *target_rrp)
 {
 	while(rrlp != NULL){
 		if(compare_rr(rrlp,target_rrp) == 0)
@@ -566,8 +520,7 @@ register struct rr *rrlp,*target_rrp;
 
 /* Make a new copy of a resource record */
 static struct rr *
-copy_rr(rrp)
-register struct rr *rrp;
+copy_rr(register struct rr *rrp)
 {
 	register struct rr *newrr;
 
@@ -618,8 +571,7 @@ register struct rr *rrp;
 }
 
 static struct rr *
-copy_rr_list(rrlp)
-register struct rr *rrlp;
+copy_rr_list(register struct rr *rrlp)
 {
 	register struct rr **rrpp;
 	struct rr *result_rrlp;
@@ -636,8 +588,7 @@ register struct rr *rrlp;
 
 /* Free (list of) resource records */
 void
-free_rr(rrlp)
-register struct rr *rrlp;
+free_rr(register struct rr *rrlp)
 {
 	register struct rr *rrp;
 
@@ -677,14 +628,7 @@ register struct rr *rrlp;
 }
 
 static struct rr *
-make_rr(source,dname,dclass,dtype,ttl,rdl,data)
-int source;
-char *dname;
-uint16 dclass;
-uint16 dtype;
-int32 ttl;
-uint16 rdl;
-void *data;
+make_rr(int source,char *dname,uint16 dclass,uint16 dtype,int32 ttl,uint16 rdl,void *data)
 {
 	register struct rr *newrr;
 
@@ -1338,12 +1282,12 @@ int32 rtt;
 	fflush(stdout);
 }
 
+/* uint16 op;		operation */
+/* struct rr *srrp;	Search RR */
+/* uint8 *buffer;	Area for query */
+/* uint16 buflen;	Length of same */
 static int
-dns_makequery(op,srrp,buffer,buflen)
-uint16 op;	/* operation */
-struct rr *srrp;/* Search RR */
-uint8 *buffer;	/* Area for query */
-uint16 buflen;	/* Length of same */
+dns_makequery(uint16 op,struct rr *srrp,uint8 *buffer,uint16 buflen)
 {
 	uint8 *cp;
 	char *cp1;
@@ -1632,9 +1576,7 @@ int32 ip_address;
  * Returns RR list, or NULL if no record found.
  */
 struct rr *
-resolve_rr(dname,dtype)
-char *dname;
-uint16 dtype;
+resolve_rr(char *dname,uint16 dtype)
 {
 	struct rr *qrrp;
 	struct rr *result_rrlp;
@@ -1671,10 +1613,10 @@ uint16 dtype;
 /* main entry point for address -> domain name resolution.
  * Returns string, or NULL if no name found.
  */
+/* int32 ip_address;		search address */
+/* int shorten;			return only first part of name (flag)*/
 char *
-resolve_a(ip_address,shorten)
-int32 ip_address;		/* search address */
-int shorten;			/* return only first part of name (flag)*/
+resolve_a(int32 ip_address, int shorten)
 {
 	struct rr *save_rrlp, *rrlp;
 	char *result = NULL;
@@ -1714,8 +1656,7 @@ int shorten;			/* return only first part of name (flag)*/
  * Returns 0 if name is currently unresolvable.
  */
 int32
-resolve(name)
-char *name;
+resolve(char *name)
 {
 	register struct rr *rrlp;
 	int32 ip_address = 0;
@@ -1757,8 +1698,7 @@ char *name;
  * Returns 0 if name is currently unresolvable.
  */
 int32
-resolve_mx(name)
-char *name;
+resolve_mx(char *name)
 {
 	register struct rr *rrp, *arrp;
 	char *sname, *tmp, *cp;
@@ -1806,9 +1746,9 @@ char *name;
 /* Search for local records of the MB, MG and MR type. Returns list of
  * matching records.
  */
+/* char *name;		local username, without trailing dot */
 struct rr *
-resolve_mailb(name)
-char *name;		/* local username, without trailing dot */
+resolve_mailb(char *name)
 {
 	register struct rr *result_rrlp;
 	struct rr *rrlp;

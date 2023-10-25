@@ -36,8 +36,7 @@ static struct param Parms[] = {
  * Used by the various ioctl routines and by KISS TNC commands
  */
 int
-devparam(s)
-char *s;
+devparam(char *s)
 {
 	int len;
 	struct param *sp;
@@ -56,8 +55,7 @@ char *s;
 }
 
 char *
-parmname(n)
-int n;
+parmname(int n)
 {
 	struct param *sp;
 

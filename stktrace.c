@@ -8,7 +8,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef MSDOS
 #include <dos.h>
+#endif
 #include <string.h>
 #include <time.h>
 #include "global.h"

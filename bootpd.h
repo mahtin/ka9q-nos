@@ -34,13 +34,13 @@ struct host {
 extern char *ArpNames[];
 extern char bp_ascii[];
 
-int readtab(void);
-void readtab_shut(void);
-void bp_log(char *fmt,...);
-void da_status(struct iface *iface);
-int da_assign(struct iface *iface,uint8 *hwaddr,int32 *ipaddr);
-int da_init(void);
-void da_shut(void);
-int da_done_net(struct iface *iface);
-int da_serve_net(struct iface *iface,int32 rstart,int32 rend);
+extern int readtab(void);
+extern void readtab_shut(void);
+extern void bp_log(char *fmt,...);
+extern void da_status(struct iface *iface);
+extern int da_assign(struct iface *iface,uint8 *hwaddr,int32 *ipaddr);
+extern int da_init(void);
+extern void da_shut(void);
+extern int da_done_net(struct iface *iface);
+extern int da_serve_net(struct iface *iface,int32 rstart,int32 rend);
 

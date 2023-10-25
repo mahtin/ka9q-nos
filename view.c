@@ -1,23 +1,32 @@
 /* Random access file viewer. PC specific */
 
 #include <stdio.h>
+#ifdef MSDOS
 #include <conio.h>
+#else
+#define MONO 0
+struct text_info {
+	int screenheight;
+	int screenwidth;
+	int currmode;
+};
+#define gettextinfo(p)	{(p)->screenheight=25; (p)->screenwidth=80; (p)->currmode = MONO;}
+#endif
 #include "global.h"
 #include "session.h"
 #include "tty.h"
 #include "commands.h"
 #include "socket.h"
 
+#ifdef MSDOS
 #include <dos.h>
+#endif
 
-static long lineseek(FILE *fp,long offset,int nlines,int width);
+static long lineseek(FILE *fp,long start,int nlines,int width);
 static int ctlproc(int c);
 
 int
-doview(argc,argv,p)
-int argc;
-char *argv[];
-void *p;
+doview(int argc, char *argv[],void *p)
 {
 	FILE *fp;
 
@@ -33,11 +42,11 @@ void *p;
  * directory listings, temporary copies of read files, etc.
  *
  */
+/* int s;	If non-zero, poll interval for a changing file */
+/* void *p1;	Open file pointer to read from */
+/* void *p2;	If non-null, name to give to session. We free it */
 void
-view(s,p1,p2)
-int s;		/* If non-zero, poll interval for a changing file */
-void *p1;	/* Open file pointer to read from */
-void *p2;	/* If non-null, name to give to session. We free it */
+view(int s, void *p1, void *p2)
 {
 	struct session *sp;
 	FILE *fp;
@@ -184,12 +193,12 @@ done:	fclose(fp);
  * or backwards the specified number of lines and return a pointer to the
  * new offset.
  */
+/* FILE *fp;	Open file stream */
+/* long start;	Offset to start searching backwards from */
+/* int nlines;	Number of lines to move forward (+) or back (-) */
+/* int width;	Screen width (max line size) */
 static long
-lineseek(fp,start,nlines,width)
-FILE *fp;	/* Open file stream */
-long start;	/* Offset to start searching backwards from */
-int nlines;	/* Number of lines to move forward (+) or back (-) */
-int width;	/* Screen width (max line size) */
+lineseek(FILE *fp,long start,int nlines,int width)
 {
 	long offset;
 	long *pointers;
@@ -295,8 +304,7 @@ int width;	/* Screen width (max line size) */
 
 /* Handle special keystrokes */
 static int
-ctlproc(c)
-int c;
+ctlproc(int c)
 {
 	switch(c){
 	case 256 + 71:	/* HOME */

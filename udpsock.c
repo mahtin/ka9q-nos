@@ -7,15 +7,12 @@ static void s_urcall(struct iface *iface,struct udp_cb *udp,int cnt);
 static void autobind(struct usock *up);
 
 int
-so_udp(up,protocol)
-struct usock *up;
-int protocol;
+so_udp(struct usock *up, int protocol)
 {
 	return 0;
 }
 int
-so_udp_bind(up)
-struct usock *up;
+so_udp_bind(struct usock *up)
 {
 	int s;
 	struct sockaddr_in *sp;
@@ -30,8 +27,7 @@ struct usock *up;
 	return 0;
 }
 int
-so_udp_conn(up)
-struct usock *up;
+so_udp_conn(struct usock *up)
 {
 	if(up->name == NULL){
 		autobind(up);
@@ -39,11 +35,7 @@ struct usock *up;
 	return 0;
 }
 int
-so_udp_recv(up,bpp,from,fromlen)
-struct usock *up;
-struct mbuf **bpp;
-struct sockaddr *from;
-int *fromlen;
+so_udp_recv(struct usock *up,struct mbuf **bpp,struct sockaddr *from,int *fromlen)
 {
 	int cnt;
 	struct udp_cb *udp;
@@ -74,11 +66,8 @@ int *fromlen;
 	return cnt;
 }
 int
-so_udp_send(
-struct usock *up,
-struct mbuf **bpp,
-struct sockaddr *to
-){
+so_udp_send(struct usock *up, struct mbuf **bpp, struct sockaddr *to)
+{
 	struct sockaddr_in *local,*remote;
 	struct socket lsock,fsock;
 
@@ -102,9 +91,7 @@ struct sockaddr *to
 	return 0;
 }
 int
-so_udp_qlen(up,rtx)
-struct usock *up;
-int rtx;
+so_udp_qlen(struct usock *up,int rtx)
 {
 	int len;
 
@@ -119,8 +106,7 @@ int rtx;
 	return len;
 }
 int
-so_udp_close(up)
-struct usock *up;
+so_udp_close(struct usock *up)
 {
 	if(up->cb.udp != NULL){
 		del_udp(up->cb.udp);
@@ -128,9 +114,7 @@ struct usock *up;
 	return 0;
 }
 int
-so_udp_shut(up,how)
-struct usock *up;
-int how;
+so_udp_shut(struct usock *up,int how)
 {
 	int s;
 
@@ -139,10 +123,7 @@ int how;
 	return 0;
 }
 static void
-s_urcall(iface,udp,cnt)
-struct iface *iface;
-struct udp_cb *udp;
-int cnt;
+s_urcall(struct iface *iface,struct udp_cb *udp,int cnt)
 {
 	ksignal(itop(udp->user),1);
 	kwait(NULL);
@@ -150,8 +131,7 @@ int cnt;
 
 /* Issue an automatic bind of a local address */
 static void
-autobind(up)
-struct usock *up;
+autobind(struct usock *up)
 {
 	struct sockaddr_in local;
 	int s;
@@ -163,8 +143,7 @@ struct usock *up;
 	bind(s,(struct sockaddr *)&local,sizeof(struct sockaddr_in));
 }
 int
-so_udp_stat(up)
-struct usock *up;
+so_udp_stat(struct usock *up)
 {
 	st_udp(up->cb.udp,0);
 	return 0;
