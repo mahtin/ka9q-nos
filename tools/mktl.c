@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 int
-main()
+main(int argc,char *argv[])
 {
 	int c;
 	int prev = 0;

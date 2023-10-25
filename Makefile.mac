@@ -49,8 +49,11 @@ all: $(CMDS)
 net: $(MAIN) $(LIBS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
-printall:
-	echo $(MAIN) $(LIBCLIENTS) $(LIBSERVERS) $(LIBINTERNET) $(LIBNET) $(LIBPPP) $(LIBNETROM) $(LIBAX25) $(LIBDUMP) $(LIBPC) $(LIBPCASM) | sed -e 's/\.o/.c/g' | tr ' ' '\012'
+allsource:
+	@( \
+		echo $(MAIN) $(LIBCLIENTS) $(LIBSERVERS) $(LIBINTERNET) $(LIBNET) $(LIBPPP) $(LIBNETROM) $(LIBAX25) $(LIBDUMP) $(LIBPC) | sed -e 's/\.o/.c/g' ; \
+		echo $(LIBPCASM) | sed -e 's/\.o/.s/g' \
+	) | tr ' ' '\012'
 
 clean:
 	rm -f $(OBJS)
